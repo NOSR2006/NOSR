@@ -2,600 +2,75 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NOSR</title>
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/flex.css">
-    <link rel="stylesheet" href="./css/font/iconfont.css">
-    <link rel="stylesheet" href="./css/font/font-awesome.min.css">
+    <link rel="icon" href="./image/X.png" type="icon">
+    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="./font_vmcrgaeirgi/iconfont.css">
+    <script src="./index.js"></script>
 </head>
 
 <body>
-    <!-- Slide -->
-    <div class="v_slide">
-        <div class="videos">
-            <video src="./video/V1.mp4" class="video" autoplay muted onended="nextSlide()"></video>
-            <video src="./video/V2.mp4" class="video" autoplay muted onended="nextSlide()"></video>
-            <video src="./video/V3.mp4" class="video" autoplay muted onended="nextSlide()"></video>
+    <div class="top">
+        <div class="top_bg">
+            <img class="top_milky" src="./image/Milky_way.jpg">
+            <div class="top_layer">
+                <img class="layer" src="./image/spacehead-layer1.png">
+                <div class="layer_bg"></div>
+            </div>
         </div>
-        <div class="ctrl">
-            <div class="v_prev" role="tab">&lt;</div>
-            <div class="v_next" role="tab">&gt;</div>
-        </div>
-        <div class="pits">
-            <div class="v_pit" role="tab"></div>
-            <div class="v_pit" role="tab"></div>
-            <div class="v_pit" role="tab"></div>
-        </div>
-    </div>
-    <div class="i_slide">
-        <div class="pics">
-            <div class="pic live"><img src="" alt="" class="pic_s" id="pic1"></div>
-            <div class="pic"><img src="" alt="" class="pic_s" id="pic2"></div>
-            <div class="pic"><img src="" alt="" class="pic_s" id="pic3"></div>
-            <div class="pic"><img src="" alt="" class="pic_s" id="pic4"></div>
-        </div>
-        <div class="ctrl">
-            <div class="i_prev" role="tab">&lt;</div>
-            <div class="i_next" role="tab">&gt;</div>
-        </div>
-        <div class="pits">
-            <div class="i_pit live" role="tab" data-index="0"></div>
-            <div class="i_pit" role="tab" data-index="1"></div>
-            <div class="i_pit" role="tab" data-index="2"></div>
-            <div class="i_pit" role="tab" data-index="3"></div>
-        </div>
-    </div>
-    <!-- Slide -->
-
-    <!-- IndexTop -->
-    <div class="index_top">
         <div class="top_logo">
-            <a href="index.html" role="tab"><img src="./image/Logo/logo1.svg" alt=""></a>
-            <a href="index.html" role="tab"><img src="./image/Logo/logo2.svg" alt=""></a>
-        </div>
-        <div class="top_box">
-            <div class="top_api">
-                <div class="api_box">
-                    <input type="text" class="cities" role="tab" placeholder="Please input your city">
-                    <button class="search" role="tab">Search</button>
-                </div>
-                <a href="#top_menu" id="inner_box" role="tab">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </a>
-                <div class="api_text">
-                    <div id="api1"></div>
-                    <div id="api2"></div>
-                    <div id="api3"></div>
-                    <div id="api4"></div>
-                    <div id="api5"></div>
-                    <div id="api6"></div>
-                    <div id="api7"></div>
-                    <div id="api8"></div>
-                </div>
-            </div>
-            <div class="top_inner">
-                <a href="index.html" role="tab">Home</a>
-                <a href="#News" role="tab">News</a>
-                <a href="#Achievements" role="tab">Achievements</a>
-                <a href="#ContactUs" role="tab">Contact Us</a>
-                <a href="#CountdownTimer" role="tab">Countdown Timer</a>
-                <a href="#touristGallery" role="tab">Tourist Gallery</a>
-                <a href="#AboutUs" role="tab">About Us</a>
-                <a href="#top_menu" id="inner_box" role="tab">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </a>
+            <div class="logo_inner">
+                <img src="./image/X.png">
             </div>
         </div>
-        <div id="top_menu">
-            <div class="menu_top">
-                <a href="#inner_box" role="tab">X</a>
-                <button role="tab">Register/Log in</button>
+        <div class="top_inner">
+            <div class="top_left">
+                <ul class="top_a">
+                    <li><a href="./NOSR.html">主页</a></li>
+                    <li><a href="#">分类</a></li>
+                    <li><a href="#">搜索</a></li>
+                    <li><a href="#">支持</a></li>
+                </ul>
             </div>
-            <input type="text" role="tab" placeholder="Search">
-            <div class="menu_inner">
-                <a href="index.html" role="tab">Home</a>
-                <a href="#News" role="tab">News</a>
-                <a href="#Achievements" role="tab">Achievements</a>
-                <a href="#ContactUs" role="tab">Contact Us</a>
-                <a href="#CountdownTimer" role="tab">Countdown Timer</a>
-                <a href="#touristGallery" role="tab">Tourist Gallery</a>
-                <a href="#AboutUs" role="tab">About Us</a>
+            <div class="top_right">
+                <div class="search_box">
+                    <input class="search" type="text" required>
+                    <div class="search_line1"></div>
+                    <div class="search_line2"></div>
+                    <label>请输入您想要在网页中查找的文字</label>
+                    <div class="search_b">
+                        <span class="iconfont">&#xe6a7;</span>
+                    </div>
+                </div>
             </div>
-            <h1>The of Catal Hospital History</h1>
-            <p>
-                Lorem ipsum dolor sit amet, consecteturadipisicing elit. A architecto laudant
-                iummagnam perspiciatis tenetur! Accusamusadipisci at cum deleniti dolores eaque
-                enimet eum, explicabo fuga itaque labore magniodit officia optio pariatur porro
-                quisquamquod sapiente tempore voluptas voluptatem?
-            </p>
-            <img src="./image/Menu.jpg" alt="">
+        </div>
+        <div class="slider">
+            <ul class="picture_list">
+                <li class="picture active"><img src="./image/Slide1.jpg" class="picture_item"></li>
+                <li class="picture"><img src="./image/Slide2.jpg" class="picture_item"></li>
+                <li class="picture"><img src="./image/Slide3.jpg" class="picture_item"></li>
+                <li class="picture"><img src="./image/Slide4.jpg" class="picture_item"></li>
+            </ul>
+            <ul class="point_list">
+                <li id="b_left">L</li>
+                <li class="point active" data-index="0"></li>
+                <li class="point" data-index="1"></li>
+                <li class="point" data-index="2"></li>
+                <li class="point" data-index="3"></li>
+                <li id="b_right">R</li>
+            </ul>
         </div>
     </div>
-    <!-- IndexTop -->
-
-    <!-- News -->
-    <div id="News">
-        <div class="top_text">News</div>
-        <div class="news_box">
-            <div class="news_img"><img src="./image/New/P1.gif" alt=""></div>
-            <h1>Title</h1>
-            <p>
-                Lorem ipsum dolor sit amet, consectertur
-                adipisicing elit. Architecto error inventore
-                minus natus nobis non officiis sint sunt
-                temporibus,voluptaem!
-            </p>
-            <div class="news_inner">
-                <div>2024/1/1</div>
-                <button role="tab">View more</button>
-            </div>
-        </div>
-        <div class="news_box">
-            <div class="news_img"><img src="./image/New/P2.jpg" alt=""></div>
-            <h1>Title</h1>
-            <p>
-                Lorem ipsum dolor sit amet, consectertur
-                adipisicing elit. Architecto error inventore
-                minus natus nobis non officiis sint sunt
-                temporibus,voluptaem!
-            </p>
-            <div class="news_inner">
-                <div>2024/1/1</div>
-                <button role="tab">View more</button>
-            </div>
-        </div>
-        <div class="news_box">
-            <div class="news_img"><img src="./image/New/P3.jpg" alt=""></div>
-            <h1>Title</h1>
-            <p>
-                Lorem ipsum dolor sit amet, consectertur
-                adipisicing elit. Architecto error inventore
-                minus natus nobis non officiis sint sunt
-                temporibus,voluptaem!
-            </p>
-            <div class="news_inner">
-                <div>2024/1/1</div>
-                <button role="tab">View more</button>
-            </div>
-        </div>
+    <div class="bottom">
+        <img class="bottom_footer" src="./image/spacefooter.png">
+        <span class="bottom_bg">
+            <img class="bottom_space" src="./image/spacebg.jpg">
+            <img class="bottom_layer" src="./image/spacehead-layer2.png">
+        </span>
     </div>
-    <!-- News -->
-
-    <!-- Achievements -->
-    <div id="Achievements">
-        <div class="top_text">Achievements</div>
-        <div class="achie_box">
-            <div class="achie_icon">
-                <i class="fas fa-globe-asia fa-3x"></i>
-            </div>
-            <h1>23</h1>
-            <p>Business has developed to 23 countries and regions</p>
-        </div>
-        <div class="achie_box">
-            <div class="achie_icon">
-                <i class="fas fa-clipboard-list fa-3x"></i>
-            </div>
-            <h1>187,698</h1>
-            <p>187,698 business projects have been completed</p>
-        </div>
-        <div class="achie_box">
-            <div class="achie_icon">
-                <i class="fas fa-users-class fa-3x"></i>
-            </div>
-            <h1>301,343</h1>
-            <p>Received a total of 301,343 tourists in total</p>
-        </div>
-        <div class="achie_box">
-            <div class="achie_icon">
-                <i class="fas fa-user-chart fa-3x"></i>
-            </div>
-            <h1>36%</h1>
-            <p>Annual business growth reached an average of 36%</p>
-        </div>
-    </div>
-    <!-- Achievements -->
-
-    <!-- ContactUs -->
-    <div id="ContactUs">
-        <div class="top_text">Contact Us</div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P1.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P2.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P3.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P4.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P5.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P6.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P7.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-        <div class="cont">
-            <div class="cont_box">
-                <div class="cont_inner">
-                    <div class="cont_img">
-                        <img src="./image/ContactUs/P8.jpg" alt="">
-                    </div>
-                    <div class="cont_text">
-                        <div>Dr.Peter Wilson</div>
-                        <div>Dentistry</div>
-                    </div>
-                </div>
-                <p>
-                    The Hospital of Catal Hospital!
-                    Lorem ipsum dolor sit amet,consectetue adipisicing elit.
-                    Architecto error inventore minus nobisnon officiis sint
-                    sunt tepmporibus, voluptatem!
-                </p>
-            </div>
-        </div>
-    </div>
-    <!-- ContactUs -->
-
-    <!-- CountdownTimer -->
-    <div id="CountdownTimer">
-        <div class="count_box">
-            <img src="./image/Time.jpg" alt="">
-            <div class="count_text">
-                <div>Countdown Timer</div>
-                <div>2024/1/1 00:00:00</div>
-            </div>
-            <div class="count_inner">
-                <div class="count_time">
-                    <div class="count_date"></div>
-                    <div class="count_date"></div>
-                    <div class="count_name">Day</div>
-                </div>
-                <div class="count_time">
-                    <div class="count_date"></div>
-                    <div class="count_date"></div>
-                    <div class="count_name">Hour</div>
-                </div>
-                <div class="count_time">
-                    <div class="count_date"></div>
-                    <div class="count_date"></div>
-                    <div class="count_name">Minute</div>
-                </div>
-                <div class="count_time">
-                    <div class="count_date"></div>
-                    <div class="count_date"></div>
-                    <div class="count_name">Second</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- CountdownTimer -->
-
-    <!-- TouristGallery -->
-    <div id="TouristGallery">
-        <div class="top_text">Tourist Gallery</div>
-        <div class="tour_box" id="tour1">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/countryside1_300_200.jpg" alt="">
-            </a>
-            <p>Hopeful seedling field</p>
-        </div>
-        <div class="tours" id="tours1">
-            <div class="tour">
-                <img src="./image/TouristGallery/countryside1_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour2">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/countryside3_300_200.jpg" alt="">
-            </a>
-            <p>Beautiful countryside</p>
-        </div>
-        <div class="tours" id="tours2">
-            <div class="tour">
-                <img src="./image/TouristGallery/countryside3_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour3">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/dom1_300_200.jpg" alt="">
-            </a>
-            <p>Country Inn</p>
-        </div>
-        <div class="tours" id="tours3">
-            <div class="tour">
-                <img src="./image/TouristGallery/dom1_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour4">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/dom2_300_200.jpg" alt="">
-            </a>
-            <p>A simple country house</p>
-        </div>
-        <div class="tours" id="tours4">
-            <div class="tour">
-                <img src="./image/TouristGallery/dom2_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour5">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/hike1_300_200.jpg" alt="">
-            </a>
-            <p>Follow the stream</p>
-        </div>
-        <div class="tours" id="tours5">
-            <div class="tour">
-                <img src="./image/TouristGallery/hike1_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour6">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/hike2_300_200.jpg" alt="">
-            </a>
-            <p>Climb high and look into the distance</p>
-        </div>
-        <div class="tours" id="tours6">
-            <div class="tour">
-                <img src="./image/TouristGallery/hike2_1200_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour7">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/hike3_299_200.jpg" alt="">
-            </a>
-            <p>Head towards the snow-covered mountain</p>
-        </div>
-        <div class="tours" id="tours7">
-            <div class="tour">
-                <img src="./image/TouristGallery/hike3_1198_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour8">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/hike4_300_200.jpg" alt="">
-            </a>
-            <p>Hiking in the countryside</p>
-        </div>
-        <div class="tours" id="tours8">
-            <div class="tour">
-                <img src="./image/TouristGallery/hike4_1203_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour9">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/lake2_301_200.jpg" alt="">
-            </a>
-            <p>Lake · Fall</p>
-        </div>
-        <div class="tours" id="tours9">
-            <div class="tour">
-                <img src="./image/TouristGallery/lake2_1204_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-        <div class="tour_box" id="tour10">
-            <a href="#tours1" role="tab">
-                <img src="./image/TouristGallery/ride2_299_200.jpg" alt="">
-            </a>
-            <p>Countryside cycling</p>
-        </div>
-        <div class="tours" id="tours10">
-            <div class="tour">
-                <img src="./image/TouristGallery/ride2_1199_800.jpg" alt="">
-                <a href="#tour1" role="tab">x</a>
-            </div>
-        </div>
-    </div>
-    <!-- TouristGallery -->
-
-    <!-- AboutUs -->
-    <div id="AboutUs">
-        <div class="top_text">Appointment</div>
-        <div class="about_box">
-            <div class="about_inner">
-                <input type="text" placeholder="Name" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <div class="about_inner">
-                <input type="text" placeholder="Email" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <div class="about_inner">
-                <input type="text" placeholder="Mobile" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <div class="about_inner">
-                <input type="text" placeholder="Department" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <div class="about_inner">
-                <input type="text" placeholder="- - : - -" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <div class="about_inner">
-                <input type="date" role="tab">
-                <div class="about_solid"></div>
-            </div>
-            <button role="tab">Appointment</button>
-        </div>
-        <div class="about_videos">
-            <a id="about_home" href="#about_video" role="tab">
-                <video src="./video/V4.mp4" autoplay muted loop></video>
-            </a>
-            <div id="about_video">
-                <div>
-                    <video src="./video/V4.mp4" autoplay muted loop></video>
-                    <a href="#about_home" role="tab">X</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- AboutUs -->
-
-    <!-- IndexBottom -->
-    <div class="index_bottom">
-        <div class="bottom_img">
-            <div role="tab"><img src="./image/SocialMedia/facebook.png"></div>
-            <div role="tab"><img src="./image/SocialMedia/google.png"></div>
-            <div role="tab"><img src="./image/SocialMedia/twitter.png"></div>
-        </div>
-        <p>&copy; copyright 2024 Catal Hospital</p>
-    </div>
-    <!-- IndexBottom -->
-
-    <!-- TopButton -->
-    <div id="top_button" role="tab">
-        <i class="iconfont icon-xiangshangshouqi-yuankuang"></i>
-    </div>
-    <!-- TopButton -->
-
-    <!-- OnLoading -->
-    <div class="loading">
-        <div class="load">
-            <div style="--i:1"></div>
-            <div style="--i:2"></div>
-            <div style="--i:3"></div>
-            <div style="--i:4"></div>
-        </div>
-    </div>
-    <!-- OnLoading -->
-
-    <!-- Script -->
-    <script src="./js/jquery-3.7.1.min.js"></script>
-    <script src="./js/api.js"></script>
-    <script src="./js/index.js"></script>
-    <!-- Script -->
 </body>
 
 </html>

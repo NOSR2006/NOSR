@@ -1,0 +1,257 @@
+/* 下面是all部分 */
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    background: #0d1117;
+    min-height: 100vh;
+}
+
+/* 上面是all部分 */
+
+/* 下面是top部分 */
+.top {
+    position: relative;
+    height: 1080px;
+}
+
+.top_layer,
+.top_bg img {
+    z-index: -10;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.layer_bg {
+    height: 200px;
+    width: 100%;
+    background: linear-gradient(to bottom, black, #0d1117);
+    position: absolute;
+    bottom: -200px;
+}
+
+.top_inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.8%;
+    box-shadow: 0 50px 50px #0d1117;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-bottom: none;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    margin: 0 8%;
+}
+
+.top_logo {
+    padding: 2.5% 0;
+}
+
+.logo_inner {
+    background-color: whitesmoke;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0 50px 25px #0d1117;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border: 5px solid #0d1117;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.logo_inner img {
+    width: 75px;
+    vertical-align: middle;
+}
+
+.top_left,
+.top_right {
+    width: 35%;
+}
+
+.top_a {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.top_a li a {
+    color: whitesmoke;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search_box {
+    position: relative;
+    width: 90%;
+    height: 38px;
+}
+
+.search {
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 18px;
+    background: none;
+    margin-left: 3%;
+    font-weight: bold;
+    color: whitesmoke;
+    cursor: pointer;
+}
+
+.search_box label {
+    position: absolute;
+    bottom: 8px;
+    left: 0px;
+    font-size: 18px;
+    color: whitesmoke;
+    font-weight: bold;
+    pointer-events: none;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    margin-left: 1%;
+}
+
+.search:focus~label,
+.search:valid~label {
+    transform: translateY(-25px);
+    font-size: 16px;
+    color: #4e6ef2;
+}
+
+.search_line1,
+.search_line2 {
+    position: absolute;
+    bottom: -1px;
+    height: 3px;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 100%;
+}
+
+.search_line1 {
+    background: #4e6ef2;
+    transform: scaleX(0);
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+.search_line2 {
+    background: whitesmoke;
+}
+
+.search:focus~.search_line1,
+.search:valid~.search_line1 {
+    transform: scaleX(1.005);
+}
+
+.search_b {
+    display: flex;
+    position: absolute;
+    right: -12%;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    border: whitesmoke solid 3px;
+    border-radius: 50%;
+    width: 42px;
+    cursor: pointer;
+    height: 42px;
+}
+
+.search_b span {
+    color: whitesmoke;
+    transition: all 0.5s ease;
+    font-size: 30px;
+}
+
+.search:focus~.search_b span,
+.search:valid~.search_b span {
+    color: #4e6ef2;
+}
+
+.slider {
+    margin-top: 3.5%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35%;
+}
+
+.picture_list {
+    position: relative;
+}
+
+.picture {
+    position: absolute;
+    list-style: none;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: all 1s;
+}
+
+.picture img {
+    width: 100%;
+    vertical-align: bottom;
+    border-radius: 15px;
+    border: #0d1117 solid 3px;
+}
+
+.picture.active {
+    opacity: 1;
+    z-index: 10;
+}
+
+.point_list {
+    z-index: 25;
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    width: 25%;
+    right: 50%;
+    bottom: 1.2%;
+    transform: translateX(50%);
+}
+
+.point_list li {
+    width: 24px;
+    list-style: none;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background-color: #0d1117;
+    cursor: pointer;
+    color: whitesmoke;
+    border: 2px solid whitesmoke;
+    font-size: 20px;
+}
+
+.point.active {
+    background-color: #4e6ef2;
+}
+
+/* 上面是top部分 */
+
+/* 下面是bottom部分 */
+.bottom {
+    display: none;
+}
+
+/* 上面是bottom部分 */
