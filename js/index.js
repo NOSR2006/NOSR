@@ -24,10 +24,10 @@ window.onload = function () {
             picture.forEach(function (item) {
                 if (pic < data.result.length) {
                     item.src = data.result[pic].url
+                    setHeight()
                     pic++
                 }
             })
-            setHeight()
         }
     })
 

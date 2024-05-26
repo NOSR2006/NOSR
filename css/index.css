@@ -17,23 +17,24 @@ body {
 
 .top {
     position: relative;
-    height: 150vh;
+    height: 100vw;
 }
 
 .top_layer,
 .top_bg img {
     z-index: -10;
     position: absolute;
+    object-fit: cover;
     height: 100%;
     width: 100%;
 }
 
 .layer_bg {
-    height: 150px;
+    height: 100px;
     width: 100%;
     background: linear-gradient(to bottom, #000000, #0d1117);
     position: absolute;
-    bottom: -150px;
+    bottom: -100px;
 }
 
 .top_inner {
@@ -45,7 +46,7 @@ body {
     border: 1px solid #e6edf3;
     border-bottom: none;
     border-radius: 15px;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(7px);
     margin: 0 7.5%;
 }
 
@@ -192,7 +193,7 @@ body {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    width: 35%;
+    width: 50%;
 }
 
 .picture_list {
