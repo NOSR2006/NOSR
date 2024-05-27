@@ -1,11 +1,7 @@
 window.onload = function () {
-    let son = document.querySelector('.picture_item')
-    let fat = document.querySelector('.picture')
-    let fat_f = document.querySelector('.picture_list')
     let all = document.querySelector('.slider')
-    let points = document.querySelectorAll('.point')
-    let picture = document.querySelectorAll('.picture_item')
-    let pictures = document.querySelectorAll('.picture')
+    let pots = document.querySelectorAll('.pot')
+    let pics = document.querySelectorAll('.pic')
     let left = document.getElementById('b_left')
     let right = document.getElementById('b_right')
     let index = 0
@@ -14,14 +10,15 @@ window.onload = function () {
     let timer
 
     function setHeight() {
-        fat_f.style.height = fat.style.height = son.offsetHeight + 'px'
+        document.querySelector('.pic_list').style.height = document.querySelector('.pic').style.height = document.querySelector('.pic_item').offsetHeight + 'px'
+        document.querySelector('.top').style.height = document.querySelector('.milky').offsetHeight + 'px'
     }
     window.onresize = setHeight
     $.ajax({
         url: "https://api.oioweb.cn/api/bing",
         type: "GET",
         success: function (data) {
-            picture.forEach(function (item) {
+            document.querySelectorAll('.pic_item').forEach(function (item) {
                 if (pic < data.result.length) {
                     item.src = data.result[pic].url
                     setHeight()
@@ -32,19 +29,19 @@ window.onload = function () {
     })
 
     let goIndex = function () {
-        for (i = 0; i < pictures.length; i++) {
-            pictures[i].className = 'picture'
+        for (i = 0; i < pics.length; i++) {
+            pics[i].className = 'pic'
         }
-        for (j = 0; j < points.length; j++) {
-            points[j].className = 'point'
+        for (j = 0; j < pots.length; j++) {
+            pots[j].className = 'pot'
         }
-        pictures[index].className = 'picture active'
-        points[index].className = 'point active'
+        pics[index].className = 'pic live'
+        pots[index].className = 'pot live'
         time = 0
     }
 
     function goRight() {
-        if (index == 3) {
+        if (index == 4) {
             index = 0
         } else {
             index++
@@ -56,17 +53,17 @@ window.onload = function () {
 
     left.addEventListener('click', function () {
         if (index == 0) {
-            index = 3
+            index = 4
         } else {
             index--
         }
         goIndex()
     })
 
-    for (i = 0; i < points.length; i++) {
-        points[i].addEventListener('click', function () {
-            let pointIndex = this.getAttribute('data-index')
-            index = pointIndex
+    for (i = 0; i < pots.length; i++) {
+        pots[i].addEventListener('click', function () {
+            let potIndex = this.getAttribute('data-index')
+            index = potIndex
             goIndex()
         })
     }
