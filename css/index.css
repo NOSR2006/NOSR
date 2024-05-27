@@ -39,18 +39,18 @@ body {
 }
 
 .top_bg span {
-    height: 100px;
+    height: 150px;
     width: 100%;
     background: linear-gradient(to bottom, #000000, #0d1117);
     position: absolute;
-    bottom: -100px;
+    bottom: -149px;
 }
 
 .top_inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5%;
+    padding: 1%;
     border: 3px solid #0d1117;
     border-radius: 15px;
     backdrop-filter: blur(7px);
@@ -58,23 +58,23 @@ body {
 
 .logo {
     display: flex;
-    box-shadow: 0 0 150px 3px #0d1117;
+    box-shadow: 0 0 250px 15px #0d1117;
     border: 3px solid #0d1117;
     background-color: #e6edf3;
     transition: all 0.5s;
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
+    width: 75px;
+    height: 75px;
+    border-radius: 15px;
     cursor: pointer;
 }
 
 .logo:hover {
-    box-shadow: 0 0 15px 3px #e6edf3;
+    box-shadow: 0 0 50px 7px #e6edf3;
 }
 
 .logo img {
     margin: auto;
-    width: 35px;
+    width: 50px;
     vertical-align: middle;
 }
 
@@ -86,14 +86,14 @@ body {
 }
 
 .top_right {
-    width: 40%;
+    width: 35%;
 }
 
 .top_a {
     width: 80%;
     list-style: none;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .top_a a {
@@ -101,6 +101,7 @@ body {
     color: #e6edf3;
     text-decoration: none;
     font-weight: bold;
+    font-size: 25px;
 }
 
 .top_a a:hover {
@@ -130,6 +131,7 @@ body {
     bottom: 7px;
     color: #e6edf3;
     font-weight: bold;
+    font-size: 25px;
     pointer-events: none;
     transition: all 0.5s;
     cursor: pointer;
@@ -138,8 +140,8 @@ body {
 
 .search:focus~label,
 .search:valid~label {
-    transform: translateY(-24px);
-    font-size: 12px;
+    transform: translateY(-25px);
+    font-size: 20px;
     color: #1f6feb;
 }
 
@@ -147,8 +149,8 @@ body {
 .search_line2 {
     position: absolute;
     background-color: #e6edf3;
-    bottom: -3px;
-    height: 3px;
+    bottom: -5px;
+    height: 5px;
     cursor: pointer;
     border-radius: 15px;
     width: 100%;
@@ -163,18 +165,18 @@ body {
 
 .search:focus~.search_line1,
 .search:valid~.search_line1 {
-    transform: scaleX(1.005);
+    transform: scaleX(1);
 }
 
 .search_b {
     display: flex;
     position: absolute;
     right: -15%;
-    top: 0;
+    top: -25%;
     border: #e6edf3 solid 3px;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
 }
 
@@ -183,8 +185,8 @@ body {
     background-color: #e6edf3;
     transition: all 0.5s;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 36px;
+    height: 36px;
 }
 
 .search:focus~.search_b span,
@@ -237,18 +239,19 @@ body {
 }
 
 .pot_list li {
-    width: 20px;
+    width: 35px;
     list-style: none;
-    height: 20px;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: 15px;
     background-color: #0d1117;
     cursor: pointer;
     color: #e6edf3;
-    border: 2px solid #e6edf3;
+    border: 3px solid #e6edf3;
     font-weight: bold;
+    font-size: 25px;
 }
 
 .pot.live {

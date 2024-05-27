@@ -28,6 +28,7 @@ window.onload = function () {
         }
     })
 
+
     let goIndex = function () {
         for (i = 0; i < pics.length; i++) {
             pics[i].className = 'pic'
@@ -41,7 +42,7 @@ window.onload = function () {
     }
 
     function goRight() {
-        if (index == 4) {
+        if (index == pics.length - 1) {
             index = 0
         } else {
             index++
@@ -53,7 +54,7 @@ window.onload = function () {
 
     left.addEventListener('click', function () {
         if (index == 0) {
-            index = 4
+            index = pics.length - 1
         } else {
             index--
         }
