@@ -1,4 +1,3 @@
-window.onload = function () {
     function setHeight() {
         setTimeout(() => {
             document.querySelector('.pic_list').style.height = document.querySelector('.pic').style.height = document.querySelector('.pic_item').offsetHeight + 'px'
@@ -78,4 +77,3 @@ window.onload = function () {
         }, 1000)
     }
     play()
-}
