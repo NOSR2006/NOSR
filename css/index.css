@@ -152,7 +152,7 @@ body {
 
 .search:focus~.search_line1,
 .search:valid~.search_line1 {
-    transform: scaleX(1);
+    transform: scaleX(1.001);
 }
 
 .search_b {
@@ -160,7 +160,8 @@ body {
     position: absolute;
     transition: all .5s;
     right: 0;
-    top: -20%;
+    bottom: 50%;
+    transform: translateY(50%);
     border: #e6edf3 solid 3px;
     background-color: #0d1117;
     border-radius: 50%;
@@ -172,8 +173,14 @@ body {
 .search_b span {
     margin: auto;
     background-color: #e6edf3;
+    border: #e6edf3 solid 3px;
     transition: all .5s;
+    color: #0d1117;
     border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
 }
@@ -185,7 +192,7 @@ body {
 
 .search:focus~.search_b span,
 .search:valid~.search_b span {
-    border: #e6edf3 solid 3px;
+    color: #e6edf3;
     background-color: #0d1117;
 }
 
@@ -199,6 +206,7 @@ body {
 
 .pic_list {
     position: relative;
+    pointer-events: none;
 }
 
 .pic_list p {
@@ -207,7 +215,6 @@ body {
     position: absolute;
     font-weight: bold;
     color: #e6edf3;
-    pointer-events: none;
 }
 
 .pic_txt1 {
@@ -277,6 +284,7 @@ body {
 .bottom {
     position: absolute;
     bottom: 0;
+    pointer-events: none;
 }
 
 .bottom img {
