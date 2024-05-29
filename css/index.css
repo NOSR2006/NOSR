@@ -1,4 +1,12 @@
+@font-face {
+    font-family: "阿里妈妈方圆体 VF Regular";
+    src: url("../webfonts/AlimamaFangYuanTiVF-Thin.woff2") format("woff2"),
+        url("../webfonts/AlimamaFangYuanTiVF-Thin.woff") format("woff");
+}
+
 * {
+    font-family: "阿里妈妈方圆体 VF Regular";
+    font-variation-settings: "BEVL" 100;
     margin: 0;
     padding: 0;
     outline: none;
@@ -47,14 +55,18 @@ body {
     bottom: -149px;
 }
 
+.top_box {
+    border: 3px solid #0d1117;
+    padding: 1%;
+    backdrop-filter: blur(7px);
+    border-radius: 15px;
+}
+
 .top_inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1%;
-    border: 3px solid #0d1117;
-    border-radius: 15px;
-    backdrop-filter: blur(7px);
+    margin-bottom: 1%;
 }
 
 .top_left {
@@ -66,14 +78,17 @@ body {
 
 .top_left a {
     transition: all .5s;
-    color: #e6edf3;
+    display: flex;
     text-decoration: none;
     font-weight: bold;
     font-size: 25px;
+    color: #e6edf3;
+    -webkit-text-stroke: 1px #e6edf300;
 }
 
 .top_left a:hover {
-    color: #1f6feb;
+    -webkit-text-stroke: 1px #e6edf3;
+    color: #0d1117;
 }
 
 .logo {
@@ -196,6 +211,20 @@ body {
     background-color: #0d1117;
 }
 
+.top_wea {
+    width: 100%;
+    padding: 0 1%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.top_wea p {
+    color: #e6edf3;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 .slider {
     margin-top: 3%;
     position: relative;
@@ -224,7 +253,7 @@ body {
 }
 
 .pic_txt2 {
-    bottom: 0.5%;
+    bottom: .5%;
     width: 100%;
     text-align: center;
     right: 50%;
@@ -261,12 +290,12 @@ body {
     transform: translateX(50%);
 }
 
-.pot_list div {
+.pot_list div,
+.pot_list span {
     width: 35px;
     height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
+    line-height: 30px;
     transition: all .5s;
     border-radius: 15px;
     background-color: #0d1117;

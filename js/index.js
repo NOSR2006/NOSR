@@ -1,26 +1,23 @@
+window.onresize = setHeight
 function setHeight() {
     setTimeout(() => {
         document.querySelector('.pic_list').style.height = document.querySelector('.pic').style.height = document.querySelector('.pic_item').offsetHeight + 'px'
         document.querySelector('.top').style.height = document.querySelector('.milky').offsetHeight + 'px'
     }, 100)
 }
-window.onresize = setHeight
 
 let pic = 0
-const pict1 = document.querySelector('.pic_txt1')
-const pict2 = document.querySelector('.pic_txt2')
 $.ajax({
     url: "https://api.oioweb.cn/api/bing",
     type: "GET",
     success: function (data) {
-        pict1.innerHTML = data.result[index].title
-        pict2.innerHTML = data.result[index].copyright
         localStorage.setItem('data', JSON.stringify(data))
+        goIndex()
         document.querySelectorAll('.pic_item').forEach(function (item) {
             if (pic < data.result.length) {
                 item.src = data.result[pic].url
-                pic++
                 setHeight()
+                pic++
             }
         })
     }
@@ -36,11 +33,11 @@ function goIndex() {
     pics[index].className = 'pic live'
     pots[index].className = 'pot live'
     time = 0
-    pict1.innerHTML = pict.result[index].title
-    pict2.innerHTML = pict.result[index].copyright
+    document.querySelector('.pic_txt1').innerHTML = pict.result[index].title
+    document.querySelector('.pic_txt2').innerHTML = pict.result[index].copyright
 }
 
-document.getElementById('pot_right').addEventListener('click', goRight)
+document.querySelector('#pot_right').addEventListener('click', goRight)
 function goRight() {
     if (index == pics.length - 1) {
         index = 0
@@ -49,7 +46,7 @@ function goRight() {
     }
     goIndex()
 }
-document.getElementById('pot_left').addEventListener('click', () => {
+document.querySelector('#pot_left').addEventListener('click', () => {
     if (index == 0) {
         index = pics.length - 1
     } else {
@@ -65,15 +62,35 @@ pots.forEach(pot => pot.addEventListener('click', (e) => {
 }))
 
 let time = 0
-let timer
-function play() {
-    timer = setInterval(() => {
-        if (time == 3) {
-            goRight()
-            time = 0
-        } else {
-            time++
+setInterval(() => {
+    if (time == 3) {
+        goRight()
+        time = 0
+    } else {
+        time++
+    }
+}, 1000)
+
+navigator.geolocation.getCurrentPosition((i) => {
+    $.ajax({
+        url: `https://api.oioweb.cn/api/ip/geocoder?lng=${i.coords.longitude}&lat=${i.coords.latitude}`,
+        type: "GET",
+        success: function (loc) {
+            $('#wea0').text('城市：' + loc.result.ad_info.city)
+            $.ajax({
+                url: `https://api.oioweb.cn/api/weather/weather?city_name=${loc.result.ad_info.city}`,
+                type: "GET",
+                success: function (data) {
+                    $('#wea1').text('日 期：' + data.result.forecast_list[1].date)
+                    $('#wea2').text('天 气：' + data.result.hourly_forecast[1].condition)
+                    $('#wea3').text('空 气：' + data.result.quality_level)
+                    $('#wea4').text('风 向：' + data.result.wind_direction)
+                    $('#wea5').text('风 力：' + data.result.wind_level + '级')
+                    $('#wea6').text('气 温：' + data.result.hourly_forecast[1].temperature + '°C')
+                    $('#wea7').text('最 高：' + data.result.high_temperature + '°C')
+                    $('#wea8').text('最 低：' + data.result.low_temperature + '°C')
+                }
+            })
         }
-    }, 1000)
-}
-play()
+    })
+})
