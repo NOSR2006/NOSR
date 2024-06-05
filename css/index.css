@@ -1,17 +1,15 @@
 @font-face {
     font-family: "阿里妈妈方圆体 VF Regular";
-    src: url("../webfonts/AlimamaFangYuanTiVF-Thin.woff") format("woff");
+    src: url("../webfonts/AlimamaFangYuanTiVF-Thin.woff2") format("woff2");
     font-display: swap;
 }
 
 * {
     font-family: "阿里妈妈方圆体 VF Regular";
     font-variation-settings: "BEVL" 150;
-    margin: 0;
-    padding: 0;
-    outline: none;
-    box-sizing: border-box;
     scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
 }
 
 img {
@@ -19,8 +17,8 @@ img {
 }
 
 body {
-    position: relative;
     background-color: #0d1117;
+    position: relative;
     height: 500vh;
 }
 
@@ -33,10 +31,10 @@ body::-webkit-scrollbar {
 }
 
 .top_bg {
-    z-index: -1;
     position: absolute;
     height: 100%;
     width: 100%;
+    z-index: -1;
 }
 
 .top_bg img {
@@ -48,12 +46,12 @@ body::-webkit-scrollbar {
     height: 100%;
 }
 
-.top_bg span {
-    height: 150px;
+.top_bg div {
+    height: 250px;
     width: 100%;
-    background: linear-gradient(to bottom, #000000, #000000, #0d1117);
+    background: linear-gradient(180deg, black, #0d1117);
     position: absolute;
-    bottom: -149px;
+    bottom: -249px;
 }
 
 .top_box {
@@ -61,6 +59,7 @@ body::-webkit-scrollbar {
     padding: 1%;
     backdrop-filter: blur(7px);
     border-radius: 15px;
+    z-index: 10;
 }
 
 .top_inner {
@@ -79,26 +78,25 @@ body::-webkit-scrollbar {
 
 .top_left a,
 .top_left p {
-    transition: all .5s;
-    display: flex;
+    transition: all 0.5s;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.5625rem;
+    font-size: 25px;
     color: #e6edf3;
-    -webkit-text-stroke: 1px #e6edf300;
 }
 
 .top_left a:hover,
 .homer div:hover~a,
 .homer span:hover~a {
-    -webkit-text-stroke: 1px #e6edf3;
-    transform: scale(1.25);
-    color: #0d1117;
+    transform: scale(1.35);
+    color: #1f6feb;
 }
 
 .logo {
     display: flex;
-    box-shadow: 0 0 350px 15px #0d1117;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 500px #0d111700;
     border: 3px solid #0d1117;
     background-color: #e6edf3;
     width: 75px;
@@ -106,26 +104,30 @@ body::-webkit-scrollbar {
     border-radius: 15px;
 }
 
-.logo img {
-    margin: auto;
-    width: 50px;
+.logo:hover {
+    box-shadow: 0 0 35px 7px #e6edf3;
 }
 
-.logo:hover {
-    box-shadow: 0 0 35px 15px #e6edf3;
+.logo img {
+    width: 50px;
+    height: 50px;
 }
 
 .homer {
+    display: flex;
     position: relative;
 }
 
 .homer div {
-    transition: all .5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s;
     border: 3px solid #e6edf3;
-    width: 250%;
-    right: 50%;
+    width: 200%;
+    left: 50%;
     bottom: -150%;
-    transform: translateX(50%) scale(0);
+    transform: translateX(-50%) scale(0);
     border-radius: 15px;
     padding: 15%;
     position: absolute;
@@ -133,24 +135,24 @@ body::-webkit-scrollbar {
 }
 
 .homer:hover div {
-    transform: translateX(50%) scale(1);
+    transform: translateX(-50%) scale(1);
     bottom: -450%;
-}
-
-.homer:hover span {
-    display: block;
 }
 
 .homer span {
     display: none;
     position: absolute;
-    right: 50%;
+    left: 50%;
     bottom: -35%;
-    transform: translateX(50%);
+    transform: translateX(-50%);
     cursor: pointer;
     color: #e6edf300;
-    width: 100%;
-    height: 100%;
+    width: 175%;
+    height: 125%;
+}
+
+.homer:hover span {
+    display: block;
 }
 
 .homer img {
@@ -174,9 +176,10 @@ body::-webkit-scrollbar {
     height: 100%;
     border: none;
     background: none;
+    outline: none;
     margin-left: 7%;
     margin-right: 15%;
-    font-size: 1.25rem;
+    font-size: 20px;
     font-weight: bold;
     color: #e6edf3;
     cursor: pointer;
@@ -187,9 +190,9 @@ body::-webkit-scrollbar {
     bottom: 7px;
     color: #e6edf3;
     font-weight: bold;
-    font-size: 1.5625rem;
+    font-size: 25px;
     pointer-events: none;
-    transition: all .5s;
+    transition: all 0.5s;
     margin-left: 5%;
 }
 
@@ -197,7 +200,7 @@ body::-webkit-scrollbar {
 .search:valid~label {
     transform: translateY(-25px);
     margin-left: 3%;
-    font-size: 1.25rem;
+    font-size: 20px;
     color: #1f6feb;
 }
 
@@ -212,24 +215,24 @@ body::-webkit-scrollbar {
 }
 
 .search_line1 {
-    transition: all .5s;
+    transition: all 0.5s;
     background-color: #1f6feb;
-    transform: scaleX(0);
+    transform: scale(0);
     z-index: 1;
 }
 
 .search:focus~.search_line1,
 .search:valid~.search_line1 {
-    transform: scaleX(1.001);
+    transform: scale(1.001);
 }
 
 .search_b {
     display: flex;
     position: absolute;
-    transition: all .5s;
+    transition: all 0.5s;
     right: 0;
-    bottom: 50%;
-    transform: translateY(50%);
+    top: 50%;
+    transform: translateY(-50%);
     border: #e6edf3 solid 3px;
     background-color: #0d1117;
     border-radius: 50%;
@@ -242,10 +245,10 @@ body::-webkit-scrollbar {
     margin: auto;
     background-color: #e6edf3;
     border: #e6edf3 solid 3px;
-    transition: all .5s;
+    transition: all 0.5s;
     color: #0d1117;
     border-radius: 50%;
-    font-size: 1.25rem;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -265,8 +268,8 @@ body::-webkit-scrollbar {
 }
 
 .top_wea {
-    width: 100%;
-    padding: 0 1%;
+    width: 98%;
+    margin: auto;
     display: flex;
     justify-content: space-between;
 }
@@ -279,18 +282,30 @@ body::-webkit-scrollbar {
 
 .top_wea p {
     color: #e6edf3;
-    text-decoration: none;
-    pointer-events: none;
     font-weight: bold;
-    font-size: 1.25rem;
+    font-size: 20px;
 }
 
 .slider {
     margin-top: 3%;
     position: relative;
+    transform: translateX(-50%);
+    left: 50%;
+    width: 75%;
+}
+
+.sli_txt {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+    top: .5%;
     left: 50%;
     transform: translateX(-50%);
-    width: 75%;
+    font-weight: bold;
+    color: #e6edf3;
+    font-size: 22px;
+    text-align: center;
+    width: 100%;
 }
 
 .pic_list {
@@ -298,32 +313,11 @@ body::-webkit-scrollbar {
     pointer-events: none;
 }
 
-.pic_list p {
-    z-index: 25;
-    position: absolute;
-    font-weight: bold;
-    color: #e6edf3;
-}
-
-.pic_txt1 {
-    bottom: .5%;
-    right: .5%;
-    font-size: 1.5625rem;
-}
-
-.pic_txt2 {
-    top: .5%;
-    width: 100%;
-    text-align: center;
-    right: 50%;
-    transform: translateX(50%);
-}
-
 .pic {
     position: absolute;
     left: 0;
     top: 0;
-    transition: all .5s;
+    transition: all 0.5s;
     opacity: 0;
 }
 
@@ -335,39 +329,33 @@ body::-webkit-scrollbar {
 
 .pic.live {
     opacity: 1;
-    z-index: 10;
+    z-index: 1;
 }
 
 .pot_list {
-    z-index: 25;
+    z-index: 2;
     position: absolute;
     display: flex;
     justify-content: space-evenly;
     width: 35%;
-    right: 50%;
+    left: 50%;
     bottom: 1%;
-    transform: translateX(50%);
+    transform: translateX(-50%);
 }
 
-.pot,
-.pot_list span {
+.pot {
     width: 35px;
     height: 35px;
-    text-align: center;
-    line-height: 30px;
-    transition: all .5s;
-    border-radius: 15px;
-    background-color: #0d1117;
     cursor: pointer;
-    color: #e6edf3;
+    transition: all 0.5s;
+    border-radius: 15px;
     border: 3px solid #e6edf3;
-    font-weight: bold;
-    font-size: 1.5625rem;
+    background-color: #0d1117;
 }
 
 .pot:hover,
-.pot_list span:hover {
-    transform: scale(1.25);
+.ctrl div:hover {
+    transform: scale(1.35);
     background-color: #1f6feb;
 }
 
@@ -375,22 +363,80 @@ body::-webkit-scrollbar {
     background-color: #1f6feb;
 }
 
+.ctrl {
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    transform: translate(-50%);
+    top: 50%;
+    left: 50%;
+    transition: all 0.5s;
+    display: flex;
+    justify-content: space-between;
+    width: 98%;
+}
+
+.ctrl div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    transition: all 0.5s;
+    border-radius: 15px;
+    background-color: #0d1117;
+    cursor: pointer;
+    border: 3px solid #e6edf3;
+}
+
+.ctrl div i {
+    font-size: 40px;
+    color: #e6edf3;
+}
+
+.slider:hover .ctrl {
+    opacity: 1;
+}
+
 .bottom {
+    height: 500px;
+    width: 100vw;
     position: absolute;
     bottom: 0;
     pointer-events: none;
 }
 
+.bottom_txt {
+    height: 50%;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.bottom_txt p {
+    font-size: 125px;
+    color: #e6edf3;
+    font-weight: bold;
+    z-index: 1;
+}
+
 .bottom img {
+    position: absolute;
+    bottom: 0;
+    object-fit: cover;
     width: 100%;
 }
 
-.bottom span {
-    height: 500px;
+.bottom_bg {
     width: 100%;
+    height: 100%;
     left: 0;
     bottom: 0;
     position: absolute;
     z-index: -1;
-    background: linear-gradient(to top, #000000, #000000, #0d1117);
+    background: linear-gradient(0deg, black 65%, #0d1117 100%);
 }

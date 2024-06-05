@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOSR</title>
     <link rel="icon" href="./img/logo.png" type="image/png">
     <link rel="stylesheet" href="./css/all.min.css">
     <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/flex.css" />
 </head>
 
 <body>
@@ -16,7 +17,7 @@
         <div class="top_bg">
             <img class="milky" src="./img/Milky_way.jpg">
             <img class="layer" src="./img/spacehead-layer1.png">
-            <span></span>
+            <div></div>
         </div>
         <div class="top_box">
             <div class="top_inner">
@@ -31,7 +32,7 @@
                             <a href="http://web.NOSR.top">web.NOSR.top</a>
                             <img src="./img/spacebg.jpg">
                         </div>
-                        <span>NOSR</span>
+                        <span>X</span>
                         <a href="http://NOSR.top">
                             <i class="fas fa-house-chimney-user">&nbsp;</i>主 页
                         </a>
@@ -72,10 +73,11 @@
             </div>
         </div>
         <div class="slider">
+            <div class="sli_txt"></div>
             <div class="pic_list">
-                <p class="pic_txt1"></p>
-                <p class="pic_txt2"></p>
                 <div class="pic live"><img src="" class="pic_item"></div>
+                <div class="pic"><img src="" class="pic_item"></div>
+                <div class="pic"><img src="" class="pic_item"></div>
                 <div class="pic"><img src="" class="pic_item"></div>
                 <div class="pic"><img src="" class="pic_item"></div>
                 <div class="pic"><img src="" class="pic_item"></div>
@@ -85,7 +87,6 @@
                 <div class="pic"><img src="" class="pic_item"></div>
             </div>
             <div class="pot_list">
-                <span id="pot_left" class="fas fa-caret-left"></span>
                 <div class="pot live" data-index="0"></div>
                 <div class="pot" data-index="1"></div>
                 <div class="pot" data-index="2"></div>
@@ -94,13 +95,28 @@
                 <div class="pot" data-index="5"></div>
                 <div class="pot" data-index="6"></div>
                 <div class="pot" data-index="7"></div>
-                <span id="pot_right" class="fas fa-caret-right"></span>
+                <div class="pot" data-index="8"></div>
+                <div class="pot" data-index="9"></div>
+            </div>
+            <div class="ctrl">
+                <div id="left">
+                    <i class="fas fa-caret-left"></i>
+                </div>
+                <div id="right">
+                    <i class="fas fa-caret-right"></i>
+                </div>
             </div>
         </div>
     </div>
     <div class="bottom">
+        <div class="bottom_txt">
+            <p>N</p>
+            <p>O</p>
+            <p>S</p>
+            <p>R</p>
+        </div>
         <img src="./img/spacefooter.png">
-        <span></span>
+        <div class="bottom_bg"></div>
     </div>
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script src="./js/index.js"></script>
