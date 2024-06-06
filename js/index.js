@@ -1,8 +1,6 @@
 $(window).resize(setHeight)
 function setHeight() {
-    setTimeout(() => {
-        $('.pic_list, .pic').css('height', $('.pic_item').outerHeight())
-    }, 250)
+    $('.pic_list, .pic').css('height', $('.pic_item').outerHeight())
 }
 
 let titles = []
@@ -41,11 +39,14 @@ $('.pot').on('click', function () {
     goIndex()
 })
 
-$('.pot').on('mouseenter', function () {
-    $(this).siblings('.pot').not(this).css('background-color', '#0d1117')
-}).on('mouseleave', function () {
-    $(this).siblings('.pot').css('background-color', '')
-})
+$('.pot').hover(
+    function () {
+        $(this).siblings('.pot').not(this).css('background-color', '#0d1117')
+    },
+    function () {
+        $(this).siblings('.pot').css('background-color', '')
+    }
+)
 
 let timer
 let time = 0
@@ -55,10 +56,27 @@ function setTime() {
         else time++
     }, 1000)
 }
+
 setTime()
+const ctrl = $('.ctrl div')
 $('.slider').hover(
-    () => { clearInterval(timer) },
-    () => { setTime() }
+    function () {
+        clearInterval(timer)
+        ctrl.css('transform', 'scale(1)')
+    },
+    function () {
+        setTime()
+        ctrl.css('transform', 'scale(0)')
+    }
+)
+
+ctrl.hover(
+    function () {
+        $(this).css('transform', 'scale(1.35)')
+    },
+    function () {
+        $(this).css('transform', 'scale(1)')
+    }
 )
 
 $.getJSON('https://api.vvhan.com/api/weather', data => {
