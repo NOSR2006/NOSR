@@ -19,7 +19,7 @@ img {
 body {
     background-color: #0d1117;
     position: relative;
-    height: 500vh;
+    height: 750vh;
 }
 
 body::-webkit-scrollbar {
@@ -51,29 +51,52 @@ body::-webkit-scrollbar {
     width: 100%;
     background: linear-gradient(180deg, black, #0d1117);
     position: absolute;
-    bottom: -249px;
+    bottom: -250px;
 }
 
 .top_box {
+    transform: translateX(-50%);
     border: 3px solid #0d1117;
-    padding: 1%;
     backdrop-filter: blur(7px);
+    transition: all 0.5s;
     border-radius: 15px;
+    position: fixed;
+    padding: 1%;
     z-index: 10;
+    width: 95%;
+    left: 50%;
+}
+
+.top_box.show {
+    width: 70%;
+    padding: 0.7% 0%;
 }
 
 .top_inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1%;
 }
 
 .top_left {
     width: 35%;
     display: flex;
-    justify-content: space-between;
+    transition: all 0.5s;
+    justify-content: space-around;
     align-items: center;
+}
+
+.top_nav {
+    width: 80%;
+    display: flex;
+    margin: auto;
+    transition: all 0.5s;
+    justify-content: space-around;
+}
+
+.top_left.show,
+.top_left.show .top_nav {
+    width: 100%;
 }
 
 .top_left a,
@@ -86,8 +109,7 @@ body::-webkit-scrollbar {
 }
 
 .top_left a:hover,
-.homer div:hover~a,
-.homer span:hover~a {
+.homer div:hover~a {
     transform: scale(1.35);
     color: #1f6feb;
 }
@@ -97,6 +119,7 @@ body::-webkit-scrollbar {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 150px 35px #e6edf300;
+    transition: all 0.5s;
     border: 3px solid #0d1117;
     background-color: #e6edf3;
     width: 75px;
@@ -104,13 +127,22 @@ body::-webkit-scrollbar {
     border-radius: 15px;
 }
 
+.logo img {
+    transition: all 0.5s;
+    width: 50px;
+    height: 50px;
+}
+
 .logo:hover {
     box-shadow: 0 0 35px 7px #e6edf3;
 }
 
-.logo img {
-    width: 50px;
-    height: 50px;
+.top_left.show .logo,
+.top_left.show .logo img {
+    width: 0px;
+    height: 0px;
+    border: none;
+    transform: scale(0%);
 }
 
 .homer {
@@ -163,7 +195,29 @@ body::-webkit-scrollbar {
 .top_right {
     width: 35%;
     position: relative;
+    transition: all 0.5s;
     height: 35px;
+    right: 0%;
+}
+
+.top_right.show {
+    transform: scale(0%);
+    width: 0%;
+}
+
+.top_right label {
+    position: absolute;
+    bottom: 7px;
+    color: #e6edf3;
+    font-weight: bold;
+    transition: all 0.5s;
+    font-size: 25px;
+    pointer-events: none;
+    margin-left: 5%;
+}
+
+.top_right.show label {
+    font-size: 0px;
 }
 
 .search {
@@ -178,17 +232,6 @@ body::-webkit-scrollbar {
     font-weight: bold;
     color: #e6edf3;
     cursor: pointer;
-}
-
-.top_right label {
-    position: absolute;
-    bottom: 7px;
-    color: #e6edf3;
-    font-weight: bold;
-    font-size: 25px;
-    pointer-events: none;
-    transition: all 0.5s;
-    margin-left: 5%;
 }
 
 .search:focus~label,
@@ -236,19 +279,19 @@ body::-webkit-scrollbar {
     cursor: pointer;
 }
 
-.search_b span {
+.search_b svg {
     margin: auto;
+    padding: 3px;
     background-color: #e6edf3;
     border: #e6edf3 solid 3px;
     transition: all 0.5s;
     color: #0d1117;
     border-radius: 50%;
-    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
 }
 
 .search:focus~.search_b,
@@ -256,17 +299,24 @@ body::-webkit-scrollbar {
     border-color: #1f6feb;
 }
 
-.search:focus~.search_b span,
-.search:valid~.search_b span {
+.search:focus~.search_b svg,
+.search:valid~.search_b svg {
     color: #e6edf3;
     background-color: #0d1117;
 }
 
 .top_wea {
     width: 98%;
-    margin: auto;
+    margin: 1% auto 0;
+    z-index: -1;
     display: flex;
     justify-content: space-between;
+    transition: all 0.5s;
+}
+
+.top_wea.show {
+    margin: auto;
+    transform: scale(0%);
 }
 
 .top_wea div {
@@ -278,7 +328,12 @@ body::-webkit-scrollbar {
 .top_wea p {
     color: #e6edf3;
     font-weight: bold;
+    transition: all 0.5s;
     font-size: 20px;
+}
+
+.top_wea.show p {
+    font-size: 0px;
 }
 
 .slider {
@@ -287,8 +342,9 @@ body::-webkit-scrollbar {
     transform: translateX(-50%);
     border: #0d1117 solid 3px;
     border-radius: 15px;
-    left: 50%;
+    overflow: hidden;
     width: 75%;
+    left: 50%;
 }
 
 .sli_txt {
@@ -312,15 +368,13 @@ body::-webkit-scrollbar {
 
 .pic {
     position: absolute;
-    left: 0;
-    top: 0;
+    inset: 0%;
     transition: all 0.5s;
-    opacity: 0;
+    opacity: 0%;
 }
 
 .pic img {
     width: 100%;
-    border-radius: 15px;
 }
 
 .pic.live {
@@ -384,8 +438,9 @@ body::-webkit-scrollbar {
     transform: scale(0);
 }
 
-.ctrl div i {
-    font-size: 40px;
+.ctrl div svg {
+    width: 50px;
+    height: 50px;
     color: #e6edf3;
 }
 
@@ -393,32 +448,35 @@ body::-webkit-scrollbar {
     height: 500px;
     width: 100vw;
     position: absolute;
-    bottom: 0;
+    bottom: 0%;
     pointer-events: none;
 }
 
 .bottom_txt {
-    height: 50%;
+    background-image: url("../img/Milky_way.jpg");
+    background-size: contain;
+    background-position: 50% 50%;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     position: absolute;
+    text-align: center;
+    z-index: 1;
     width: 100%;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    height: 50%;
+    bottom: 0%;
 }
 
-.bottom_txt p {
+.bottom_txt span {
     font-size: 125px;
+    margin: 0% 5%;
     color: #e6edf3;
     font-weight: bold;
-    z-index: 1;
 }
 
 .bottom img {
     position: absolute;
-    bottom: 0;
     object-fit: cover;
+    bottom: 0%;
     width: 100%;
 }
 
@@ -429,5 +487,5 @@ body::-webkit-scrollbar {
     bottom: 0;
     position: absolute;
     z-index: -1;
-    background: linear-gradient(0deg, black 65%, #0d1117 100%);
+    background: linear-gradient(0deg, black 50%, #0d1117 100%);
 }

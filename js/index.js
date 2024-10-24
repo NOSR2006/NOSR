@@ -1,11 +1,24 @@
+let topBgm = $(".top_bgm")
 $(window).resize(setHeight)
 function setHeight() {
     $('.pic_list, .pic').css('height', $('.pic_item').outerHeight())
+    topBgm.css('height', $('.top_box').outerHeight())
 }
+
+$(window).on('scroll', () => {
+    if ($(this).scrollTop() > topBgm.offset().top) {
+        $('.top_box').addClass('show')
+        $('.top_left').addClass('show')
+        $('.top_right').addClass('show')
+        $('.top_wea').addClass('show')
+    } else {
+        $('.show').removeClass('show');
+    }
+})
 
 let titles = []
 $.each($('.pic_item'), function () {
-    $.getJSON('https://api.vvhan.com/api/bing?type=json&rand=sj', data => {
+    $.getJSON('https://api.vvhan.com/api/bing?type=json&rand=sj&size=1920', data => {
         $(this).attr('src', data.data.url)
         titles.push(data.data.title)
         setHeight()
