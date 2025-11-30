@@ -98,9 +98,6 @@ ctrl.hover(
 )
 
 navigator.geolocation.getCurrentPosition(i => {
-    $.getJSON(`/api/test?lat=${i.coords.latitude}&lon=${i.coords.longitude}`, data => {
-        console.log('Baidu_API: ', data)
-    })
     $.getJSON(`/api/weather?lat=${i.coords.latitude}&lon=${i.coords.longitude}`, data => {
         console.log('Weather_API: ', data);
         let today = new Date(data.dt * 1000 + 2592000000)
@@ -120,6 +117,7 @@ $(function () {
     setTimeout(() => {
         $('.mask').fadeOut(1500)
         $('.mask p').text('Ending')
+        setHeight()
     }, 1500)
     setHeight()
 })

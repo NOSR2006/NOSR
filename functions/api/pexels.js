@@ -1,4 +1,3 @@
-require('dotenv').config()
 export async function onRequestGet({ env }) {
     try {
         const res = await fetch(
