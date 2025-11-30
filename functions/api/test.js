@@ -6,7 +6,7 @@ export async function onRequestGet({ request, env }) {
         const lon = url.searchParams.get('lon')
         if (!lat || !lon) return new Response(JSON.stringify({ error: '缺少经纬度' }), { status: 400, headers })
         const res = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&appid=${env.WeatherAPI}&units=metric&lang=zh_cn`
+            `https://api.map.baidu.com/weather/v1/?location=${encodeURIComponent(lon)},${encodeURIComponent(lat)}&data_type=all&ak=${env.BaiduWeather}`
         )
         if (!res.ok) return new Response(JSON.stringify({ error: '服务端失败' }), { status: res.status, headers })
         const data = await res.json()

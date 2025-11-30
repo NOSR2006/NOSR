@@ -120,3 +120,7 @@ $(function () {
     }, 1500)
     setHeight()
 })
+
+$.getJSON('/api/test', data => {
+    console.log('Baidu_API: ', data)
+})
