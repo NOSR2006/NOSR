@@ -27,25 +27,18 @@ function goIndex() {
     time = 0
 }
 
-$.ajax({
-    url: `https://api.pexels.com/v1/curated?page=${Math.ceil(Math.random() * 100)}&per_page=7`,
-    method: 'GET',
-    headers: {
-        'Authorization': PexelsAPI
-    },
-    success: function (data) {
-        console.log('Pexels_API: ', data)
-        $('.pic_item').each(function (i) {
-            if ($(this).attr('src')) {
-                titles.push("The future will come")
-            } else {
-                $(this).attr('src', data.photos[i].src.original)
-                titles.push(data.photos[i].alt)
-            }
-        })
-        setHeight()
-        goIndex()
-    }
+$.getJSON('/api/pexels', data => {
+    console.log('Pexels_API: ', data)
+    $('.pic_item').each(function (i) {
+        if ($(this).attr('src')) {
+            titles.push("The future will come")
+        } else {
+            $(this).attr('src', data.photos[i].src.original)
+            titles.push(data.photos[i].alt)
+        }
+    })
+    setHeight()
+    goIndex()
 })
 
 $('#right').click(goRight)
