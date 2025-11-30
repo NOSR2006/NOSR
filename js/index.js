@@ -105,7 +105,7 @@ ctrl.hover(
 )
 
 navigator.geolocation.getCurrentPosition(i => {
-    $.getJSON(`https://pro.openweathermap.org/data/2.5/weather?lat=${i.coords.latitude}&lon=${i.coords.longitude}&lang=zh_cn&appid=WeatherAPI&units=metric`, data => {
+    $.getJSON(`/weather?lat=${i.coords.latitude}&lon=${i.coords.longitude}`, data => {
         console.log('Weather_API: ', data);
         let today = new Date(data.dt * 1000 + 2592000000)
         $('.top_right label').text('日 期: ' + today.getFullYear() + '年' + today.getMonth() + '月' + today.getDate() + '日')
