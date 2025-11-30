@@ -2,7 +2,7 @@ export async function onRequestGet({ env }) {
     try {
         const res = await fetch(
             `https://api.pexels.com/v1/curated?page=${Math.ceil(Math.random() * 100)}&per_page=7`,
-            { headers: { Authorization: env.PexelsAPI } }
+            { headers: { Authorization: env.PEXELS } }
         )
         if (!res.ok) return new Response(JSON.stringify({ error: '服务端失败' }), { status: res.status })
         const data = await res.json()
