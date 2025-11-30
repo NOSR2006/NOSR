@@ -447,6 +447,10 @@ body::-webkit-scrollbar {
     color: #f2f2f7;
 }
 
+.center {
+    margin: 15% auto;
+}
+
 .bottom {
     height: 500px;
     width: 100vw;

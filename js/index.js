@@ -27,7 +27,7 @@ function goIndex() {
     time = 0
 }
 
-$.getJSON('/api/pexels', data => {
+$.getJSON('https://nosr.top/api/pexels', data => {
     console.log('Pexels_API: ', data)
     $('.pic_item').each(function (i) {
         if ($(this).attr('src')) {
@@ -98,9 +98,9 @@ ctrl.hover(
 )
 
 navigator.geolocation.getCurrentPosition(i => {
-    $.getJSON(`/api/weather?lat=${i.coords.latitude}&lon=${i.coords.longitude}`, data => {
+    $.getJSON(`https://nosr.top/api/weather?lon=${i.coords.longitude}&lat=${i.coords.latitude}`, data => {
         console.log('Weather_API: ', data);
-        let today = new Date(data.dt * 1000 + 2592000000)
+        let today = new Date()
         $('.top_right label').text('日 期: ' + today.getFullYear() + '年' + today.getMonth() + '月' + today.getDate() + '日')
         $('#wea1').text('天 气: ' + data.weather[0].description)
         $('#wea2').text('视 距: ' + data.visibility / 1000 + ' 公 里')
