@@ -1,3 +1,4 @@
+require('dotenv').config()
 export async function onRequestGet({ request, env }) {
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     try {
