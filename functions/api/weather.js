@@ -9,7 +9,7 @@ export async function onRequestGet(context) {
         return new Response(JSON.stringify({ error: '参数缺失' }), { status: 400 })
     }
 
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=zh_cn`;
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=zh_cn`
     const response = await fetch(weatherUrl)
     const data = await response.json()
 
