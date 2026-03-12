@@ -27,7 +27,7 @@ function goIndex() {
     time = 0
 }
 
-$.getJSON('https://nosr.top/api/pexels&count=7', data => {
+$.getJSON('https://nosr.top/api/pexels?count=7', data => {
     console.log('Pexels_API: ', data)
     $('.pic_item').each(function (i) {
         if ($(this).attr('src')) {
@@ -120,11 +120,4 @@ $(function () {
         setHeight()
     }, 1500)
     setHeight()
-})
-
-var app = new Vue({
-    el: '#app',
-    data: {
-        sliderText: 'Hello Vue!'
-    }
 })
