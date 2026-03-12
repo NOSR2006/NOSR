@@ -1,0 +1,46 @@
+@media (max-width: 48rem) {
+    .top_box {
+        width: 75vw;
+        padding: 0.7% 0%;
+    }
+
+    .top_left,
+    .top_left .top_nav {
+        width: 100%;
+    }
+
+    .top_left a,
+    .top_left p {
+        font-size: 1rem;
+    }
+
+    .top_left .logo,
+    .top_left .logo img {
+        width: 0;
+        height: 0;
+        border: none;
+        transform: scale(0%);
+    }
+
+    .top_right {
+        transform: scale(0%);
+        width: 0%;
+    }
+
+    .top_right label {
+        font-size: 0;
+    }
+
+    .top_wea {
+        margin: 0;
+        transform: scale(0%);
+    }
+
+    .top_wea p {
+        font-size: 0;
+    }
+}
+
+@media (max-width: 75rem) {
+
+}

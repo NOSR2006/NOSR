@@ -1,6 +1,7 @@
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ request, env }) {
+    const url = new URL(request.url)
     const res = await fetch(
-        `https://api.pexels.com/v1/curated?page=${Math.ceil(Math.random() * 100)}&per_page=7`,
+        `https://api.pexels.com/v1/curated?page=${Math.ceil(Math.random() * 100)}&per_page=${url.searchParams.get('count')}`,
         { headers: { Authorization: env.PEXELS } }
     )
     const data = await res.json()

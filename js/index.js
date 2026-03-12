@@ -12,7 +12,7 @@ $(window).on('scroll', () => {
         $('.top_right').addClass('show')
         $('.top_wea').addClass('show')
     } else {
-        $('.show').removeClass('show');
+        $('.show').removeClass('show')
     }
 })
 
@@ -23,11 +23,11 @@ const pots = $('.pot')
 function goIndex() {
     pics.removeClass('live').eq(index).addClass('live')
     pots.removeClass('live').eq(index).addClass('live')
-    $('.sli_txt').text(titles[index])
+    $('.sliderText').text(titles[index])
     time = 0
 }
 
-$.getJSON('https://nosr.top/api/pexels', data => {
+$.getJSON('https://nosr.top/api/pexels&count=7', data => {
     console.log('Pexels_API: ', data)
     $('.pic_item').each(function (i) {
         if ($(this).attr('src')) {
@@ -101,7 +101,7 @@ navigator.geolocation.getCurrentPosition(i => {
     $.getJSON(`https://nosr.top/api/weather?lon=${i.coords.longitude}&lat=${i.coords.latitude}`, data => {
         console.log('Weather_API: ', data);
         let today = new Date()
-        $('.top_right label').text('日 期: ' + today.getFullYear() + '年' + today.getMonth() + '月' + today.getDate() + '日')
+        $('.top_right label').text('日 期: ' + today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日')
         $('#wea1').text('天 气: ' + data.weather[0].description)
         $('#wea2').text('视 距: ' + data.visibility / 1000 + ' 公 里')
         $('#wea3').text('湿 度: ' + data.main.humidity + ' %')
@@ -120,4 +120,11 @@ $(function () {
         setHeight()
     }, 1500)
     setHeight()
+})
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        sliderText: 'Hello Vue!'
+    }
 })
