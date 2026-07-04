@@ -1,0 +1,33 @@
+# NOSR Dashboard — Cloudflare Pages 配置
+# 文档：https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+
+name = "nosr-dashboard"
+compatibility_date = "2025-12-01"
+
+# ===== 部署配置 =====
+pages_build_output_dir = "."
+
+# ===== KV 存储 =====
+# 部署前需在 Cloudflare Dashboard 创建 KV namespace:
+#   Workers & Pages > KV > Create namespace > 名称 "NOSR_KV"
+# 创建后将 ID 填入下方，preview_id 用于本地 wrangler dev
+[[kv_namespaces]]
+binding = "NOSR_KV"
+id = "3b2e5e0f8e194f7784eb36a033674eb9"
+preview_id = "3b2e5e0f8e194f7784eb36a033674eb9"
+
+# ===== 环境变量 =====
+# 这些变量也需在 Cloudflare Dashboard 的 Pages 项目设置中配置:
+#   Pages > nosr-dashboard > Settings > Environment variables
+[vars]
+# 管理员密码 SHA-256 哈希（生成: node -e "console.log(require('crypto').createHash('sha256').update('密码').digest('hex'))"）
+ADMIN_PASSWORD_HASH = "d2749fa3626e786e86ae4f2b7d9b7782ce473636110de098e140b3d70fdc02fc"
+
+# 访客密码 SHA-256 哈希（空字符串表示允许无密码访客）
+VISITOR_PASSWORD_HASH = ""
+
+# JWT 签名密钥（至少 32 字符随机字符串）
+JWT_SECRET = "6c2861fa213cbb9be6ee8c62a54f5340c32a416f5a8dd6d1d15b7325b6b354ca"
+
+# 站点标题
+SITE_TITLE = "NOSR Dashboard"
