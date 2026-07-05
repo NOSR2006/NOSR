@@ -3,10 +3,10 @@
  * 面板模块采用动态 import，仅在登录后按需加载
  */
 
-console.log('NOSR Dashboard v260709v');
+console.log('NOSR Dashboard v260705a');
 
-import { initAuth, logout } from './auth.js?v=260709v';
-import { $, showToast } from './utils.js?v=260709v';
+import { initAuth, logout } from './auth.js?v=260705a';
+import { $, showToast } from './utils.js?v=260705a';
 
 // ===== 主初始化 =====
 async function init() {

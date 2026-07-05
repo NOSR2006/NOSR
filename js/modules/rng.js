@@ -6,9 +6,10 @@
 import {
     POOL, LUCK_LEVELS, SPIN_MS, FRAMES, fmt,
     PARTICLES, BURST_SETS, TIER_COLORS,
-} from './rng-config.js?v=260709w';
+} from './rng-config.js?v=260705a';
 
-import { playDrone, playImpact, playChime, playRipple, initAudio } from './rng-audio.js?v=260709w';
+import { playDrone, playImpact, playChime, playRipple, initAudio } from './rng-audio.js?v=260705a';
+import { FXScene } from './fx-scene.js?v=260705a';
 
 // ============== 概率引擎 ==============
 
@@ -65,8 +66,10 @@ function getLuck(total) {
 
 // ============== 特效函数（可在此注册新的） ==============
 
-// ===== Wave 海洋过场（10s，GSAP timeline） =====
+// ===== Wave 海洋过场（10s，GSAP timeline，含 fallback） =====
 function waveReveal() {
+    const gsap = window.gsap;
+
     const ov = document.createElement('div');
     ov.className = 'rng-wave';
     ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:#000;overflow:hidden;';
@@ -91,12 +94,33 @@ function waveReveal() {
     `;
     document.body.appendChild(ov);
 
-    const tl = gsap.timeline({ onComplete: () => { __fxPlaying = false; ov.remove(); } });
-
     // ── 音效 ──
     playDrone(2000, 40, 0.3);
-    tl.call(() => playImpact(55), null, 2);
-    tl.call(() => playRipple(330, 6), null, 2.5);
+    setTimeout(() => playImpact(55), 2000);
+    setTimeout(() => playRipple(330, 6), 2500);
+
+    // 无 GSAP 时不阻塞 — 回退到 CSS animation 模式
+    if (!gsap) {
+        // 回退：恢复各元素的 inline animation 样式
+        ov.querySelectorAll('.rng-wave-fish').forEach((f, i) => {
+            f.style.animationDuration = (5+Math.random()*5)+'s';
+            f.style.animationDelay = Math.random()*1.5+'s';
+        });
+        ov.querySelectorAll('.rng-wave-bubble').forEach(b => {
+            b.style.animationDuration = (4+Math.random()*5)+'s';
+            b.style.animationDelay = Math.random()*6+'s';
+        });
+        ov.querySelectorAll('.rng-wave-spark').forEach(s => {
+            s.style.animationDuration = (1.5+Math.random()*3)+'s';
+            s.style.animationDelay = Math.random()*5+'s';
+        });
+        ov.classList.add('gsap-fallback');
+        setTimeout(() => ov.classList.add('out'), 10000);
+        setTimeout(() => { __fxPlaying = false; ov.remove(); }, 10600);
+        return;
+    }
+
+    const tl = gsap.timeline({ onComplete: () => { __fxPlaying = false; ov.remove(); } });
 
     // 海洋生物 — 立刻开始，9s 内完成
     const seaLife = ['🐠','🐟','🐡','🦈','🐋','🐳','🐬','🦭','🐙','🦑','🦀','🦞'];
@@ -106,11 +130,16 @@ function waveReveal() {
         f.style.top = (5+Math.random()*72)+'%';
         f.style.fontSize = (1+Math.random()*2.5)+'rem';
         ov.appendChild(f);
+        const t = 5+Math.random()*5;
+        const delay = Math.random() * 1.5;
+        // 水平游动
         tl.fromTo(f,
             { x: 0, y: 0, scaleX: -1, rotate: 2 },
-            { x: '110vw', y: 0, duration: 5+Math.random()*5, ease: 'none' },
-            Math.random() * 1.5
+            { x: '110vw', y: 0, duration: t, ease: 'none' },
+            delay
         );
+        // 垂直波动 — 有机摆尾
+        tl.to(f, { y: -15+Math.random()*10, duration: t*0.25, ease: 'sine.inOut', yoyo: true, repeat: 3 }, delay);
     }
 
     // 气泡 — 两波
@@ -140,6 +169,7 @@ function waveReveal() {
 
     // 冲击波 2s
     const shock = ov.querySelector('.rng-wave-shock');
+    tl.call(() => playImpact(55), null, 2);
     tl.fromTo(shock, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, 2);
     tl.to(shock, { opacity: 0, scale: 1.5, duration: 1, ease: 'power2.in' }, 2.5);
 
@@ -147,17 +177,30 @@ function waveReveal() {
     const waves = ov.querySelector('.rng-wave-waves');
     tl.to(waves, { opacity: 1, duration: 0.8 }, 2);
 
-    // 中心揭示 2.5s
+    // 中心揭示 2.5s — 弹性弹入
+    tl.call(() => playRipple(330, 6), null, 2.5);
     const center = ov.querySelector('.rng-wave-center');
-    tl.fromTo(center, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.5)' }, 2.5);
+    center.style.animation = 'none'; center.style.opacity = '1'; center.style.transform = 'scale(1)';
+    const symEl = center.querySelector('.rng-wave-symbol');
+    const textEl = center.querySelector('.rng-wave-text');
+    const subEl = center.querySelector('.rng-wave-sub');
+    // 字母拆分 stagger
+    const letters = textEl.textContent.trim().split('').map(ch => {
+        const s = document.createElement('span'); s.textContent = ch; return s;
+    });
+    textEl.textContent = ''; letters.forEach(l => textEl.appendChild(l));
+
+    tl.fromTo(symEl, { opacity: 0, scale: 0, rotate: -30 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.8, ease: 'elastic.out(1, 0.3)' }, 2.5);
+    tl.fromTo(letters, { opacity: 0, y: 30, scale: 0.5 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.06, ease: 'back.out(2)' }, 2.7);
+    tl.fromTo(subEl, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.2);
 
     // 全场淡出 10s
     tl.to(ov, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 10);
 }
-}
 
-// ===== NOSR 科技风 15s 过场 — Web/AI 主题 =====
+// ===== NOSR 科技风 15s — 全 GSAP 时间轴 =====
 function nosrReveal() {
+    const gsap = window.gsap;
     const ov = document.createElement('div');
     ov.className = 'rng-nosr-tech';
     ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:#000;overflow:hidden;';
@@ -165,26 +208,18 @@ function nosrReveal() {
         <canvas class="rng-nt-canvas" id="rngNtCanvas"></canvas>
         <div class="rng-nt-bg"></div>
         <div class="rng-nt-grid"></div>
-        <!-- 神经网络 SVG -->
         <svg class="rng-nt-neural" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-            <!-- 连接线 -->
             <g class="rng-nt-links" fill="none" stroke-width="0.8">
                 ${(()=>{ let s=''; for(let i=0;i<18;i++){ const ax=100+Math.random()*1000,ay=100+Math.random()*600,bx=100+Math.random()*1000,by=100+Math.random()*600; s+=`<path class="rng-nt-link" d="M${ax},${ay} L${bx},${by}"/>`; } return s; })()}
             </g>
-            <!-- 神经网络节点 -->
             <g class="rng-nt-nodes">${(()=>{ let s=''; for(let i=0;i<16;i++){ s+=`<circle class="rng-nt-nn" cx="${100+Math.random()*1000}" cy="${100+Math.random()*600}" r="${2+Math.random()*4}"/>`; } return s; })()}</g>
         </svg>
-        <!-- 扫描线 -->
         <div class="rng-nt-scan"></div>
         <div class="rng-nt-scan rng-nt-scan-rev"></div>
         <div class="rng-nt-star"><svg viewBox="0 0 200 200"><rect x="35" y="35" width="130" height="130" transform="rotate(0,100,100)"/><rect x="35" y="35" width="130" height="130" transform="rotate(45,100,100)"/></svg></div>
-        <!-- 终端碎片 -->
         <div class="rng-nt-terminal" id="rngNtTerm"></div>
-        <!-- 光环 -->
         <div class="rng-nt-rings">
-            <div class="rng-nt-ring r1"></div>
-            <div class="rng-nt-ring r2"></div>
-            <div class="rng-nt-ring r3"></div>
+            <div class="rng-nt-ring r1"></div><div class="rng-nt-ring r2"></div><div class="rng-nt-ring r3"></div>
         </div>
         <div class="rng-nt-core"></div>
         <div class="rng-nt-center">
@@ -195,134 +230,203 @@ function nosrReveal() {
     `;
     document.body.appendChild(ov);
 
-    // ── 音效 ──
-    playDrone(6000, 30, 0.35);                                // 深空嗡鸣 0-6s
-    setTimeout(() => { playImpact(40); playChime([196,247,294,392,587], 3.5); }, 6000); // 冲击+谐波 6s
-
-    // ===== 统一资源追踪（防泄漏） =====
-    const resources = [];
-    const track = (type, id) => { resources.push({ type, id }); return id; };
+    // 销毁标记 + Canvas RAF 资源
+    let destroyed = false;
+    const rafIds = [];
+    const timers = [];
+    const intervals = [];
+    const listeners = [];
     const doCleanup = () => {
-        for (const r of resources) {
-            if (r.type === 'raf') cancelAnimationFrame(r.id);
-            else if (r.type === 'timer') clearTimeout(r.id);
-            else if (r.type === 'interval') clearInterval(r.id);
-            else if (r.type === 'listener') window.removeEventListener('resize', r.id);
-        }
-        resources.length = 0;
+        destroyed = true;
+        rafIds.forEach(id => cancelAnimationFrame(id));
+        timers.forEach(id => clearTimeout(id));
+        intervals.forEach(id => clearInterval(id));
+        listeners.forEach(([el, ev, fn]) => el.removeEventListener(ev, fn));
+        rafIds.length = timers.length = intervals.length = listeners.length = 0;
     };
-    const sched = (fn, ms) => track('timer', setTimeout(fn, ms));
-    const schedI = (fn, ms) => track('interval', setInterval(fn, ms));
-    // 劫持 ov.remove → 自动 cleanup
-    const _remove = ov.remove.bind(ov);
-    ov.remove = () => { doCleanup(); _remove(); };
 
-    // Canvas 诊断数据流（点阵 + 横扫 + 随机闪烁）
+    // ===== GSAP 主时间轴 =====
+    const gsapLib = window.gsap;
+    const tl = gsapLib ? gsapLib.timeline({ onComplete: () => { doCleanup(); __fxPlaying = false; ov.remove(); } }) : null;
+
+    // ── 音效 ──
+    playDrone(6000, 30, 0.35);
+    if (tl) {
+        tl.call(() => { playImpact(40); playChime([196,247,294,392,587], 3.5); }, null, 6);
+    } else {
+        setTimeout(() => { playImpact(40); playChime([196,247,294,392,587], 3.5); }, 6000);
+    }
+
+    // ── Canvas 数据流 ──
     const canvas = ov.querySelector('#rngNtCanvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
-        let animId, trail = 0.12;
+        let trail = 0.12;
         const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
         resize();
-        track('listener', resize);
+        listeners.push([window, 'resize', resize]);
         window.addEventListener('resize', resize);
-        // 随机散布粒子
+
         const particles = Array.from({length: 200}, () => ({
             x: Math.random() * canvas.width, y: Math.random() * canvas.height,
             vx: (Math.random()-0.5)*0.6, vy: (Math.random()-0.5)*0.6,
             c: ['0','1','.',':','*','#','%','$','@'][Math.floor(Math.random()*9)],
             life: Math.random(), age: 0
         }));
-        // 横扫线
         const sweeps = Array.from({length: 3}, () => ({
             y: Math.random() * canvas.height, speed: 0.3+Math.random()*0.7, dir: Math.random()>0.5?1:-1
         }));
         const draw = () => {
-            if (!canvas.parentElement) return; // 已销毁
+            if (destroyed) return;
             ctx.fillStyle = `rgba(0,0,0,${trail})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.font = '12px "Fira Code",Consolas,monospace';
             ctx.shadowBlur = 0;
-
-            // 粒子
             for (const p of particles) {
                 p.x += p.vx; p.y += p.vy; p.age++;
                 if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
                 if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
                 if (p.age > 300) { p.age = 0; p.x = Math.random()*canvas.width; p.y = Math.random()*canvas.height; }
                 const alpha = 0.1 + 0.3 * Math.sin(p.age * 0.05 + p.life * 10);
-                ctx.fillStyle = p.c === '1' || p.c === '0' 
-                    ? `rgba(47,129,247,${alpha})`
-                    : `rgba(47,129,247,${alpha*0.4})`;
+                ctx.fillStyle = p.c === '1' || p.c === '0' ? `rgba(47,129,247,${alpha})` : `rgba(47,129,247,${alpha*0.4})`;
                 ctx.fillText(p.c, p.x, p.y);
             }
-
-            // 横扫线
             for (const s of sweeps) {
                 s.y += s.speed * s.dir;
                 if (s.y < -10) { s.y = canvas.height + 10; s.speed = 0.3+Math.random()*0.7; }
                 if (s.y > canvas.height + 10) { s.y = -10; s.speed = 0.3+Math.random()*0.7; }
-                ctx.strokeStyle = 'rgba(47,129,247,0.15)';
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'rgba(47,129,247,0.15)'; ctx.lineWidth = 1;
                 ctx.beginPath(); ctx.moveTo(0, s.y); ctx.lineTo(canvas.width, s.y); ctx.stroke();
-                // 偶尔高亮
                 if (Math.random() > 0.97) {
                     ctx.shadowBlur = 20; ctx.shadowColor = '#2f81f7';
-                    ctx.strokeStyle = 'rgba(47,129,247,0.4)';
-                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'rgba(47,129,247,0.4)'; ctx.lineWidth = 2;
                     ctx.beginPath(); ctx.moveTo(0, s.y); ctx.lineTo(canvas.width, s.y); ctx.stroke();
                     ctx.shadowBlur = 0;
                 }
             }
-
-            animId = track('raf', requestAnimationFrame(draw));
+            rafIds.push(requestAnimationFrame(draw));
         };
         draw();
-        // 13s 起 trail 递增 → 渐淡
-        sched(() => {
-            const tUp = schedI(() => { trail = Math.min(0.35, trail + 0.008); }, 200);
-            sched(() => { clearInterval(tUp); }, 2000);
-        }, 13000);
+        // Canvas trail fade at 13s
+        if (tl) {
+            tl.to({}, { duration: 2, onUpdate: function() { trail = Math.min(0.35, trail + 0.008 * (1/60)); } }, 13);
+        } else {
+            setTimeout(() => { const iv = setInterval(() => { trail = Math.min(0.35, trail + 0.008); }, 200); setTimeout(() => clearInterval(iv), 2000); }, 13000);
+        }
     }
 
-    // ===== 神经网络呼吸 =====
+    // ── 神经网络呼吸 ──
     const neural = ov.querySelector('.rng-nt-neural');
     if (neural) {
         const nnodes = neural.querySelectorAll('.rng-nt-nn');
-        const stored = Array.from(nnodes).map(n => ({
-            el: n, cx: +n.getAttribute('cx'), cy: +n.getAttribute('cy')
-        }));
-        schedI(() => {
+        const stored = Array.from(nnodes).map(n => ({ el: n, cx: +n.getAttribute('cx'), cy: +n.getAttribute('cy') }));
+        const breathe = setInterval(() => {
+            if (destroyed) { clearInterval(breathe); return; }
             for (const s of stored) {
                 s.el.setAttribute('cx', s.cx + (Math.random() - 0.5) * 40);
                 s.el.setAttribute('cy', s.cy + (Math.random() - 0.5) * 25);
             }
         }, 2500);
+        intervals.push(breathe);
     }
 
-    // 浮游光点
+    // ── GSAP CSS 元素动画 ──
+    if (tl) {
+        // Canvas fade in
+        tl.fromTo(canvas, { opacity: 0 }, { opacity: 1, duration: 2 }, 1);
+        // Scan lines
+        const scans = ov.querySelectorAll('.rng-nt-scan');
+        tl.fromTo(scans, { opacity: 0 }, { opacity: 1, duration: 0.5 }, 1);
+        // Grid
+        const grid = ov.querySelector('.rng-nt-grid');
+        tl.fromTo(grid, { opacity: 0 }, { opacity: 1, duration: 1 }, 2);
+        // Neural network
+        tl.fromTo(neural, { opacity: 0 }, { opacity: 1, duration: 1 }, 3);
+        // Star
+        const star = ov.querySelector('.rng-nt-star');
+        tl.fromTo(star, { opacity: 0 }, { opacity: 1, duration: 1 }, 4);
+        // Rings
+        const rings = ov.querySelector('.rng-nt-rings');
+        tl.fromTo(rings, { opacity: 0 }, { opacity: 1, duration: 1 }, 5);
+        // Center reveal
+        const center = ov.querySelector('.rng-nt-center');
+        center.style.animation = 'none'; center.style.opacity = '1'; center.style.transform = 'scale(1)';
+        const symEl = center.querySelector('.rng-nt-symbol');
+        const textEl = center.querySelector('.rng-nt-text');
+        const subEl = center.querySelector('.rng-nt-sub');
+        const textLetters = textEl.textContent.trim().split('').map(ch => {
+            const s = document.createElement('span'); s.textContent = ch; return s;
+        });
+        textEl.textContent = ''; textLetters.forEach(l => textEl.appendChild(l));
+        tl.fromTo(symEl, { opacity: 0, scale: 0, rotate: -20 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.8, ease: 'back.out(3)' }, 6);
+        tl.fromTo(textLetters, { opacity: 0, y: 50, scale: 0.3 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out' }, 6.1);
+        tl.fromTo(subEl, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 6.6);
+
+        // Hack sequence at 13s
+        tl.call(() => {
+            const xo = document.createElement('div');
+            xo.className = 'rng-nt-hack';
+            xo.innerHTML = `<div class="rng-nt-hack-bars"></div><div class="rng-nt-hack-overlay"></div><div class="rng-nt-hack-text"><div class="rng-nt-hack-line l1">[!] UNAUTHORIZED ACCESS DETECTED</div><div class="rng-nt-hack-line l2">[!] FIREWALL BYPASSED — NOSR://ROOT</div><div class="rng-nt-hack-line l3">[>] INJECTING PAYLOAD... ████████████ 100%</div><div class="rng-nt-hack-line l4">[✓] SYSTEM COMPROMISED — 7,777,777 NODES BREACHED</div></div><div class="rng-nt-hack-glitch"></div>`;
+            xo.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;';
+            ov.appendChild(xo);
+            setTimeout(() => xo.classList.add('tear'), 200);
+            setTimeout(() => xo.classList.add('redflash'), 600);
+            setTimeout(() => xo.classList.add('reveal'), 800);
+            setTimeout(() => xo.classList.add('fadeout'), 1800);
+        }, null, 13);
+
+        // Fade out 15s
+        tl.to(ov, { opacity: 0, duration: 0.8, ease: 'power2.in' }, 15);
+    } else {
+        // Fallback: CSS animations
+        setTimeout(() => ov.classList.add('out'), 15000);
+        setTimeout(() => { __fxPlaying = false; doCleanup(); ov.remove(); }, 15800);
+    }
+
+    // ── 浮游光点 + 粒子 ──
     for (let i = 0; i < 80; i++) {
         const s = document.createElement('span'); s.className = 'rng-nt-spark';
         s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
-        s.style.animationDuration = (2+Math.random()*5)+'s'; s.style.animationDelay = (1+Math.random()*10)+'s';
+        if (tl) {
+            tl.fromTo(s, { opacity: 0, scale: 0.3 }, { opacity: 0.7, scale: 1.5, duration: 1, yoyo: true, repeat: -1, ease: 'power1.inOut' }, Math.random() * 8 + 1);
+        } else {
+            s.style.animationDuration = (2+Math.random()*5)+'s'; s.style.animationDelay = (1+Math.random()*10)+'s';
+        }
         ov.appendChild(s);
     }
 
-    // 网络/API 粒子
     const webIcons = ['⬡','⬢','⬣','{ }','[ ]','<>','</>','#','*','🔗','📡','🌐','💻','⚡','🔌'];
     for (let i = 0; i < 60; i++) {
         const p = document.createElement('span'); p.className = 'rng-nt-particle';
         p.textContent = webIcons[Math.floor(Math.random()*webIcons.length)];
-        const a = Math.random()*Math.PI*2, d = 80+Math.random()*500;
-        p.style.setProperty('--dx', Math.cos(a)*d+'px'); p.style.setProperty('--dy', Math.sin(a)*d+'px');
-        p.style.animationDuration = (1+Math.random()*4)+'s';
-        p.style.animationDelay = (3+Math.random()*5)+'s';
         p.style.fontSize = (0.5+Math.random()*1.2)+'rem';
         ov.appendChild(p);
+        if (tl) {
+            const a = Math.random()*Math.PI*2, d = 80+Math.random()*500;
+            tl.fromTo(p,
+                { x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 },
+                { x: Math.cos(a)*d, y: Math.sin(a)*d, opacity: 0, scale: 0.1, rotate: 360, duration: 1+Math.random()*4, ease: 'power2.out' },
+                3 + Math.random() * 6
+            );
+        } else {
+            const a = Math.random()*Math.PI*2, d = 80+Math.random()*500;
+            p.style.setProperty('--dx', Math.cos(a)*d+'px'); p.style.setProperty('--dy', Math.sin(a)*d+'px');
+            p.style.animationDuration = (1+Math.random()*4)+'s';
+            p.style.animationDelay = (3+Math.random()*5)+'s';
+        }
     }
 
-    // ===== 打字机终端 =====
+    // 光标闪烁
     const term = ov.querySelector('#rngNtTerm');
+    setTimeout(() => {
+        if (destroyed) return;
+        const prompt = document.createElement('div');
+        prompt.className = 'rng-nt-codeline c4';
+        prompt.innerHTML = '$ <span class="rng-nt-cursor">▌</span>';
+        term.appendChild(prompt);
+    }, 12800);
+
+    // ── Typewriter ──
     const termLines = [
         { t:"$ curl -s https://api.nosr.top/v1/inference \\", c:'',   d:4.0 },
         { t:'  -H "Authorization: Bearer ****" \\',         c:'',   d:4.3 },
@@ -336,7 +440,6 @@ function nosrReveal() {
         { t:'▲ [nosr] 7,777,777 nodes · 330 edge locations', c:'c3', d:6.9 },
         { t:'✓ Deployed in 7.7s — nosr.top is live',         c:'c4', d:7.3 },
         { t:'══════════════════════════════════════',         c:'c4', d:7.7 },
-        // 升级入侵（填充死区 7.7→13s）
         { t:'$ breach core.nosr.top',                         c:'c2', d:8.8 },
         { t:'Analyzing target architecture...',               c:'c2', d:9.4 },
         { t:'Firewall bypassed · [████████] 100%',             c:'c2', d:10.0 },
@@ -352,56 +455,17 @@ function nosrReveal() {
     lineEls.forEach(({el, text, delay}) => {
         let i = 0;
         const type = () => {
-            if (!el.parentElement) return; // 已销毁
+            if (destroyed || !el.parentElement) return;
             if (i <= text.length) {
                 el.textContent = text.slice(0, i) + (i < text.length ? '▌' : '');
                 i++;
-                track('timer', setTimeout(type, 20 + Math.random() * 40));
+                timers.push(setTimeout(type, 20 + Math.random() * 40));
             } else {
                 el.textContent = text;
             }
         };
-        track('timer', setTimeout(type, delay));
+        timers.push(setTimeout(type, delay));
     });
-
-    // 终端完成后闪烁光标 → 骇入前悬疑
-    sched(() => {
-        const prompt = document.createElement('div');
-        prompt.className = 'rng-nt-codeline c4';
-        prompt.innerHTML = '$ <span class="rng-nt-cursor">▌</span>';
-        term.appendChild(prompt);
-    }, 12800);
-
-    // ===== 骇入收尾 =====
-    sched(() => {
-        const xo = document.createElement('div');
-        xo.className = 'rng-nt-hack';
-        xo.innerHTML = `
-            <div class="rng-nt-hack-bars"></div>
-            <div class="rng-nt-hack-overlay"></div>
-            <div class="rng-nt-hack-text">
-                <div class="rng-nt-hack-line l1">[!] UNAUTHORIZED ACCESS DETECTED</div>
-                <div class="rng-nt-hack-line l2">[!] FIREWALL BYPASSED — NOSR://ROOT</div>
-                <div class="rng-nt-hack-line l3">[>] INJECTING PAYLOAD... ████████████ 100%</div>
-                <div class="rng-nt-hack-line l4">[✓] SYSTEM COMPROMISED — 7,777,777 NODES BREACHED</div>
-            </div>
-            <div class="rng-nt-hack-glitch"></div>
-        `;
-        xo.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;';
-        ov.appendChild(xo);
-
-        // 屏幕撕裂
-        sched(() => { xo.classList.add('tear'); }, 200);
-        // 红色闪烁
-        sched(() => { xo.classList.add('redflash'); }, 600);
-        // 文字逐行出现
-        sched(() => { xo.classList.add('reveal'); }, 800);
-        // 最终黑屏
-        sched(() => { xo.classList.add('fadeout'); }, 1800);
-    }, 13000);
-
-    sched(() => ov.classList.add('out'), 15000);
-    sched(() => { __fxPlaying = false; ov.remove(); }, 15800);
 }
 
 
@@ -724,6 +788,24 @@ function genesisReveal() {
     }
     ov.appendChild(frag3);
 
+    // ── GSAP 增强中心揭示（5.5s 处弹性弹入 + 字母 stagger）──
+    if (window.gsap) {
+        const center = ov.querySelector('.rng-gs-center');
+        center.style.animation = 'none'; center.style.opacity = '1'; center.style.transform = 'scale(1)'; // 禁用 CSS animation
+        const symEl = center.querySelector('.rng-gs-symbol');
+        const textEl = center.querySelector('.rng-gs-text');
+        const subEl = center.querySelector('.rng-gs-sub');
+        const letters = textEl.textContent.trim().split('').map(ch => {
+            const s = document.createElement('span'); s.textContent = ch; return s;
+        });
+        textEl.textContent = ''; letters.forEach(l => textEl.appendChild(l));
+
+        const tl = window.gsap.timeline();
+        tl.fromTo(symEl, { opacity: 0, scale: 0, y: -60 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'elastic.out(1, 0.3)' }, 5.5);
+        tl.fromTo(letters, { opacity: 0, y: 40, scale: 0.3 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.07, ease: 'back.out(2.5)' }, 5.8);
+        tl.fromTo(subEl, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 6.4);
+    }
+
     setTimeout(() => ov.classList.add('out'), 10000);
     setTimeout(() => { __fxPlaying = false; ov.remove(); }, 11000);
 }
@@ -740,7 +822,7 @@ function runFx(prize) {
         if (CUSTOM_FX[prize.tier]) {
             if (__fxPlaying) return;
             __fxPlaying = true;
-            CUSTOM_FX[prize.tier]();
+            try { CUSTOM_FX[prize.tier](); } catch(e) { console.error('FX crash:', e); __fxPlaying = false; }
             return;
         }
     }
@@ -768,6 +850,7 @@ function flashScreen(color) {
 // ============== 主模块 ==============
 
 export async function initRNG() {
+    try {
     const g = id => document.getElementById(id);
     const d = g('rngDisplay'), sym = g('rngSymbol'), lbl = g('rngLabel');
     const rar = g('rngRarity'), btn = g('rngRollBtn');
@@ -1035,4 +1118,5 @@ export async function initRNG() {
     }
 
     rngList();
+    } catch(e) { console.error('RNG init failed:', e); }
 }

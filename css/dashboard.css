@@ -1819,6 +1819,11 @@ body.visitor .admin-only {
     background: rgba(0,180,255,0.8);
     border-radius: 50%;
 }
+
+/* GSAP fallback — .gsap-fallback 时恢复 CSS animation */
+.rng-wave.gsap-fallback .rng-wave-fish { animation: rngWaveFish linear forwards; }
+.rng-wave.gsap-fallback .rng-wave-bubble { animation: rngWaveBub linear forwards; }
+.rng-wave.gsap-fallback .rng-wave-spark { animation: rngWaveSpark ease-in-out infinite alternate; }
 @keyframes rngWaveSpark {
     0% { opacity: 0; transform: scale(0.5); }
     50% { opacity: 0.9; transform: scale(1.5); }
