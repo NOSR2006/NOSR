@@ -65,7 +65,7 @@ function getLuck(total) {
 
 // ============== 特效函数（可在此注册新的） ==============
 
-// ===== Wave 海洋过场（10s，三段式） =====
+// ===== Wave 海洋过场（10s，GSAP timeline） =====
 function waveReveal() {
     const ov = document.createElement('div');
     ov.className = 'rng-wave';
@@ -91,44 +91,69 @@ function waveReveal() {
     `;
     document.body.appendChild(ov);
 
-    // ── 音效 ──
-    playDrone(2000, 40, 0.3);                        // 深海嗡鸣 0-2s
-    setTimeout(() => playImpact(55), 2000);           // 冲击 2s
-    setTimeout(() => playRipple(330, 6), 2500);       // 涟漪泛音 2.5s
+    const tl = gsap.timeline({ onComplete: () => { __fxPlaying = false; ov.remove(); } });
 
-    // 海洋生物 — 立刻开始，9s内完成全程
+    // ── 音效 ──
+    playDrone(2000, 40, 0.3);
+    tl.call(() => playImpact(55), null, 2);
+    tl.call(() => playRipple(330, 6), null, 2.5);
+
+    // 海洋生物 — 立刻开始，9s 内完成
     const seaLife = ['🐠','🐟','🐡','🦈','🐋','🐳','🐬','🦭','🐙','🦑','🦀','🦞'];
     for (let i = 0; i < 22; i++) {
         const f = document.createElement('span'); f.className = 'rng-wave-fish';
         f.textContent = seaLife[Math.floor(Math.random()*seaLife.length)];
         f.style.top = (5+Math.random()*72)+'%';
-        f.style.animationDuration = (5+Math.random()*5)+'s';
-        f.style.animationDelay = Math.random()*1.5+'s';
         f.style.fontSize = (1+Math.random()*2.5)+'rem';
         ov.appendChild(f);
+        tl.fromTo(f,
+            { x: 0, y: 0, scaleX: -1, rotate: 2 },
+            { x: '110vw', y: 0, duration: 5+Math.random()*5, ease: 'none' },
+            Math.random() * 1.5
+        );
     }
 
-    // 气泡 — 两波，覆盖整个10s
-    for (let i = 0; i < 20; i++) {
+    // 气泡 — 两波
+    for (let i = 0; i < 40; i++) {
         const b = document.createElement('span'); b.className = 'rng-wave-bubble';
-        b.style.left = Math.random()*100+'%'; b.style.width = b.style.height = (4+Math.random()*14)+'px';
-        b.style.animationDuration = (5+Math.random()*4)+'s'; b.style.animationDelay = Math.random()*3+'s'; ov.appendChild(b);
-    }
-    for (let i = 0; i < 20; i++) {
-        const b = document.createElement('span'); b.className = 'rng-wave-bubble';
-        b.style.left = Math.random()*100+'%'; b.style.width = b.style.height = (3+Math.random()*10)+'px';
-        b.style.animationDuration = (4+Math.random()*4)+'s'; b.style.animationDelay = (2+Math.random()*4)+'s'; ov.appendChild(b);
+        b.style.left = Math.random()*100+'%';
+        b.style.width = b.style.height = (3+Math.random()*12)+'px';
+        ov.appendChild(b);
+        tl.fromTo(b,
+            { y: 0, x: 0, scale: 1, opacity: 0.5 },
+            { y: '-110vh', x: (Math.random()-0.5)*30, scale: 0.2, opacity: 0, duration: 4+Math.random()*5, ease: 'none' },
+            Math.random() * 6
+        );
     }
 
     // 浮游光点
     for (let i = 0; i < 50; i++) {
         const s = document.createElement('span'); s.className = 'rng-wave-spark';
         s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
-        s.style.animationDuration = (1.5+Math.random()*3)+'s'; s.style.animationDelay = Math.random()*5+'s'; ov.appendChild(s);
+        ov.appendChild(s);
+        tl.fromTo(s,
+            { opacity: 0, scale: 0.5 },
+            { opacity: 0.9, scale: 1.5, duration: 1.5, yoyo: true, repeat: 3, ease: 'power1.inOut' },
+            Math.random() * 5
+        );
     }
 
-    setTimeout(() => ov.classList.add('out'), 10000);
-    setTimeout(() => { __fxPlaying = false; ov.remove(); }, 10600);
+    // 冲击波 2s
+    const shock = ov.querySelector('.rng-wave-shock');
+    tl.fromTo(shock, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, 2);
+    tl.to(shock, { opacity: 0, scale: 1.5, duration: 1, ease: 'power2.in' }, 2.5);
+
+    // 波浪层渐入 2s
+    const waves = ov.querySelector('.rng-wave-waves');
+    tl.to(waves, { opacity: 1, duration: 0.8 }, 2);
+
+    // 中心揭示 2.5s
+    const center = ov.querySelector('.rng-wave-center');
+    tl.fromTo(center, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.5)' }, 2.5);
+
+    // 全场淡出 10s
+    tl.to(ov, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 10);
+}
 }
 
 // ===== NOSR 科技风 15s 过场 — Web/AI 主题 =====
