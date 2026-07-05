@@ -2,7 +2,7 @@
  * clock.js — 实时时钟模块
  */
 
-import { $, formatTime, formatDate } from './utils.js';
+import { $, formatTime, formatDate } from '../utils.js?v=260709v';
 
 export function initClock() {
     const timeEl = $('#clockTime');

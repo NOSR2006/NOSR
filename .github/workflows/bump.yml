@@ -1,0 +1,34 @@
+name: Auto Bump Version
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/**'
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[bump]')"
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version
+        run: bash bump.sh
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            VER=$(grep -o 'v[0-9]\{6\}[a-z]' index.html | head -1)
+            git commit -m "[bump] $VER"
+            git push
+          fi

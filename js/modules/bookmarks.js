@@ -2,8 +2,8 @@
  * bookmarks.js — 快捷入口模块
  */
 
-import { API, $, showToast, escapeHtml } from './utils.js';
-import { isAdmin } from './auth.js';
+import { API, $, showToast, escapeHtml } from '../utils.js?v=260709v';
+import { isAdmin } from '../auth.js?v=260709v';
 
 export async function initBookmarks() {
     const grid = $('#bookmarksGrid');

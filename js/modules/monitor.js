@@ -2,8 +2,8 @@
  * monitor.js — 服务状态监控模块
  */
 
-import { API, $, showToast, escapeHtml } from './utils.js';
-import { isAdmin } from './auth.js';
+import { API, $, showToast, escapeHtml } from '../utils.js?v=260709v';
+import { isAdmin } from '../auth.js?v=260709v';
 
 export async function initMonitor() {
     const list = $('#monitorList');

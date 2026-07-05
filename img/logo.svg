@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 圆角方形背景，与页面主题同色 -->
+  <rect x="2" y="2" width="60" height="60" rx="18" fill="#0d1117"/>
+  <!-- 外圈蓝色描边 -->
+  <rect x="2" y="2" width="60" height="60" rx="18" fill="none" stroke="#2f81f7" stroke-width="2.5"/>
+  <!-- 内圈细线 -->
+  <rect x="8" y="8" width="48" height="48" rx="14" fill="none" stroke="#2f81f7" stroke-width="0.8" opacity="0.4"/>
+  <!-- N 字母，圆角粗体 -->
+  <text x="32" y="42" text-anchor="middle" font-family="'Segoe UI','Inter',sans-serif"
+        font-size="30" font-weight="800" fill="#2f81f7" letter-spacing="-1">N</text>
+  <!-- 底部装饰线 -->
+  <line x1="18" y1="52" x2="46" y2="52" stroke="#2f81f7" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+</svg>

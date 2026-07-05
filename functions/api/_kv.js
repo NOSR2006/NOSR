@@ -30,28 +30,6 @@ async function listKeys(env, namespace, prefix = '') {
     return result.keys.map(k => k.name.replace(`${KV_PREFIX}${namespace}:`, ''));
 }
 
-// ===== Todos =====
-
-async function getTodos(env, userId = 'admin') {
-    const data = await getJSON(env, 'todos', userId);
-    return data || [];
-}
-
-async function saveTodos(env, todos, userId = 'admin') {
-    await putJSON(env, 'todos', userId, todos);
-}
-
-// ===== Notes =====
-
-async function getNotes(env, userId = 'admin') {
-    const data = await getJSON(env, 'notes', userId);
-    return data || [];
-}
-
-async function saveNotes(env, notes, userId = 'admin') {
-    await putJSON(env, 'notes', userId, notes);
-}
-
 // ===== Bookmarks =====
 
 async function getBookmarks(env, userId = 'admin') {
@@ -97,8 +75,6 @@ async function saveSiteConfig(env, config) {
 
 export {
     getJSON, putJSON, deleteKey, listKeys,
-    getTodos, saveTodos,
-    getNotes, saveNotes,
     getBookmarks, saveBookmarks,
     getRssFeeds, saveRssFeeds,
     getMonitorTargets, saveMonitorTargets,

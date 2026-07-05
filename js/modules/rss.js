@@ -2,8 +2,8 @@
  * rss.js — RSS 信息流模块
  */
 
-import { API, $, showToast, escapeHtml, timeAgo } from './utils.js';
-import { isAdmin } from './auth.js';
+import { API, $, showToast, escapeHtml, timeAgo } from '../utils.js?v=260709v';
+import { isAdmin } from '../auth.js?v=260709v';
 
 export async function initRSS() {
     const list = $('#rssList');

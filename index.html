@@ -8,12 +8,13 @@
     <meta name="theme-color" content="#0d1117">
     <meta name="robots" content="noindex, nofollow">
     <title>NOSR Dashboard</title>
-    <link rel="icon" href="./img/logo.png" type="image/png">
+    <link rel="icon" href="./img/logo.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="./img/logo.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/dashboard.css">
-    <script type="module" src="./js/dashboard.js"></script>
+    <link rel="stylesheet" href="./css/index.css?v=260709y">
+    <link rel="stylesheet" href="./css/dashboard.css?v=260709y">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script type="module" src="./js/dashboard.js?v=260709y"></script>
 </head>
 <body>
 
@@ -21,13 +22,31 @@
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
             <div class="login-logo">
-                <img src="./img/logo.png" alt="NOSR">
+                <img src="./img/logo.svg" alt="NOSR" class="logo-icon">
             </div>
             <h2>NOSR Dashboard</h2>
             <p class="login-desc">私密空间，请输入访问密码</p>
-            <form id="loginForm" class="login-form">
+            <form id="loginForm" class="login-form" method="post" action="#" onsubmit="
+                var p=document.getElementById('passwordInput').value.trim();
+                if(!p)return false;
+                var e=document.getElementById('loginError');
+                e.textContent='';
+                fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})})
+                .then(r=>r.json()).then(d=>{
+                    if(d.success){
+                        document.getElementById('loginOverlay').classList.add('hidden');
+                        document.getElementById('dashboard').style.display='';
+                        document.getElementById('topBar').style.display='';
+                        var rb=document.getElementById('roleBadge');
+                        rb.textContent=d.role==='admin'?'管理员':'用户';
+                        rb.className='role-badge '+(d.role==='admin'?'admin':'visitor');
+                        if(d.role!=='admin')document.body.classList.add('visitor');
+                        window.dispatchEvent(new CustomEvent('nosr:dashboard-ready',{detail:{role:d.role}}));
+                    }else{e.textContent=d.error||'密码错误'}
+                }).catch(function(){e.textContent='连接失败，请检查网络'});
+                return false">
                 <div class="input-group">
-                    <input type="password" id="passwordInput" placeholder="输入密码..."
+                    <input type="password" id="passwordInput" name="password" placeholder="输入密码..."
                         autocomplete="current-password" required>
                     <button type="submit" class="btn-login">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -35,14 +54,22 @@
                 </div>
                 <p id="loginError" class="login-error"></p>
             </form>
-            <button id="guestBtn" class="btn-guest">以访客身份浏览</button>
+            <button id="guestBtn" class="btn-guest" onclick="
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('dashboard').style.display='';
+                document.getElementById('topBar').style.display='';
+                document.body.classList.add('visitor');
+                document.getElementById('roleBadge').textContent='访客';
+                document.getElementById('roleBadge').className='role-badge visitor';
+            ">以访客身份浏览</button>
+            <div class="login-version">v260709v</div>
         </div>
     </div>
 
     <!-- ====== 顶部栏 ====== -->
     <header id="topBar" class="topbar" style="display:none">
         <div class="topbar-left">
-            <img src="./img/logo.png" alt="NOSR" class="topbar-logo">
+            <img src="./img/logo.svg" alt="NOSR" class="topbar-logo">
             <span class="topbar-title">NOSR Dashboard</span>
             <span id="roleBadge" class="role-badge"></span>
         </div>
@@ -53,12 +80,14 @@
             </div>
         </div>
         <div class="topbar-right">
-            <button id="refreshBtn" class="topbar-btn" title="刷新数据">
+            <button id="refreshBtn" class="topbar-btn" title="刷新页面" onclick="location.reload()">
                 <i class="fa-solid fa-arrows-rotate"></i>
             </button>
-            <button id="settingsBtn" class="topbar-btn" title="设置">
-                <i class="fa-solid fa-gear"></i>
-            </button>
+            <button id="themeToggle" class="topbar-btn" title="切换主题" onclick="
+                var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
+                document.documentElement.setAttribute('data-theme',t);
+                localStorage.setItem('nosr-theme',t);
+            "><i class="fa-solid fa-sun"></i><i class="fa-solid fa-moon"></i></button>
             <button id="logoutBtn" class="topbar-btn" title="退出">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </button>
@@ -68,33 +97,33 @@
     <!-- ====== 仪表盘主体 ====== -->
     <main id="dashboard" class="dashboard" style="display:none">
 
-        <!-- 第一行：天气 + 时钟快捷 -->
-        <section class="panel weather-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-cloud-sun"></i> 天气</h3>
-            </div>
-            <div class="weather-content">
-                <div class="weather-main">
-                    <span id="weatherTemp" class="weather-temp">--°C</span>
-                    <span id="weatherDesc" class="weather-desc">--</span>
+        <!-- RNG Hero — 三栏 -->
+        <section class="panel rng-panel rng-hero">
+            <div class="rng-content">
+                <!-- 左栏：操作 + 统计 -->
+                <div class="rng-col rng-col-left">
+                    <button id="rngRollBtn" class="rng-roll-btn">
+                        <i class="fa-solid fa-shuffle"></i> Roll
+                    </button>
+                    <label class="rng-auto-toggle" id="rngAutoLabel">
+                        <input type="checkbox" id="rngAutoCb">
+                        <span class="rng-auto-slider"></span>
+                        <span class="rng-auto-text">Auto</span>
+                    </label>
+                    <div class="rng-stats" id="rngStats"></div>
                 </div>
-                <div class="weather-details">
-                    <div class="weather-item">
-                        <i class="fa-solid fa-droplet"></i>
-                        <span id="weatherHumidity">--</span>
+                <!-- 中栏：显示区 -->
+                <div class="rng-col rng-col-center">
+                    <div class="rng-display" id="rngDisplay">
+                        <span id="rngSymbol" class="rng-symbol">?</span>
+                        <span id="rngLabel" class="rng-label-text"></span>
+                        <span id="rngRarity" class="rng-rarity"></span>
                     </div>
-                    <div class="weather-item">
-                        <i class="fa-solid fa-eye"></i>
-                        <span id="weatherVisibility">--</span>
-                    </div>
-                    <div class="weather-item">
-                        <i class="fa-solid fa-temperature-high"></i>
-                        <span id="weatherFeels">--</span>
-                    </div>
-                    <div class="weather-item">
-                        <i class="fa-solid fa-cloud"></i>
-                        <span id="weatherClouds">--</span>
-                    </div>
+                </div>
+                <!-- 右栏：可滚动图鉴 -->
+                <div class="rng-col rng-col-right">
+                    <div class="rng-gallery-header">Prize Gallery</div>
+                    <div id="rngGallery" class="rng-gallery"></div>
                 </div>
             </div>
         </section>
@@ -136,58 +165,7 @@
             </div>
         </section>
 
-        <!-- 第二行左：待办事项 -->
-        <section class="panel todos-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-list-check"></i> 待办事项</h3>
-                <div class="panel-header-right">
-                    <span id="todoCount" class="todo-count">0</span>
-                    <button id="addTodoBtn" class="panel-btn admin-only" title="添加待办">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="todoList" class="todo-list">
-                <!-- 动态渲染 -->
-                <p class="empty-hint">暂无待办事项</p>
-            </div>
-            <div id="todoInput" class="todo-input hidden">
-                <input type="text" id="todoTextInput" placeholder="添加新任务..." maxlength="200">
-                <div class="todo-input-actions">
-                    <select id="todoPriority">
-                        <option value="low">低优先</option>
-                        <option value="medium" selected>中优先</option>
-                        <option value="high">高优先</option>
-                    </select>
-                    <button id="todoSaveBtn" class="btn-sm btn-primary">保存</button>
-                    <button id="todoCancelBtn" class="btn-sm">取消</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 第二行右：速记笔记 -->
-        <section class="panel notes-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-pen-to-square"></i> 速记</h3>
-                <button id="addNoteBtn" class="panel-btn admin-only" title="新建笔记">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <div id="noteList" class="note-list">
-                <p class="empty-hint">暂无笔记</p>
-            </div>
-            <!-- 笔记编辑弹窗 -->
-            <div id="noteEditor" class="note-editor hidden">
-                <input type="text" id="noteTitleInput" placeholder="标题..." maxlength="100">
-                <textarea id="noteContentInput" placeholder="内容..." rows="6" maxlength="2000"></textarea>
-                <div class="note-editor-actions">
-                    <button id="noteSaveBtn" class="btn-sm btn-primary">保存</button>
-                    <button id="noteCancelBtn" class="btn-sm">取消</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 第三行左：RSS 订阅 -->
+        <!-- RSS 订阅 -->
         <section class="panel rss-panel">
             <div class="panel-header">
                 <h3><i class="fa-solid fa-rss"></i> 信息流</h3>
@@ -231,8 +209,11 @@
 
     </main>
 
-    <!-- Font Awesome -->
-    <script src="./js/fontawesome.min.js"></script>
-    <script src="./js/all.min.js"></script>
+    <script>
+    (function(){
+        var t=localStorage.getItem('nosr-theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+        document.documentElement.setAttribute('data-theme',t);
+    })();
+    </script>
 </body>
 </html>
