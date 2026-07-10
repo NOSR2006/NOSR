@@ -42,29 +42,16 @@ export async function api(url, options = {}) {
 
 export const API = {
     auth: {
-        login: (password) => api('/api/auth', {
+        login: (username, password) => api('/api/auth', {
             method: 'POST',
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ username, password })
+        }),
+        register: (username, password) => api('/api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ username, password })
         }),
         logout: () => api('/api/auth', { method: 'DELETE' }),
         check: () => api('/api/auth'),
-    },
-    bookmarks: {
-        list: () => api('/api/bookmarks'),
-        add: (data) => api('/api/bookmarks', { method: 'POST', body: JSON.stringify(data) }),
-        update: (id, data) => api(`/api/bookmarks?id=${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-        remove: (id) => api(`/api/bookmarks?id=${id}`, { method: 'DELETE' }),
-    },
-    rss: {
-        items: () => api('/api/rss'),
-        feeds: () => api('/api/rss/feeds'),
-        addFeed: (data) => api('/api/rss/feeds', { method: 'POST', body: JSON.stringify(data) }),
-        removeFeed: (id) => api(`/api/rss/feeds?id=${id}`, { method: 'DELETE' }),
-    },
-    monitor: {
-        status: (refresh = false) => api(`/api/monitor${refresh ? '?refresh=1' : ''}`),
-        addTarget: (data) => api('/api/monitor/target', { method: 'POST', body: JSON.stringify(data) }),
-        removeTarget: (id) => api(`/api/monitor/target?id=${id}`, { method: 'DELETE' }),
     },
 };
 
@@ -109,8 +96,15 @@ export function showToast(msg, type = 'info', duration = 2500) {
         box-shadow: var(--shadow-panel);
     `;
     document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s'; }, duration - 300);
+    window.dispatchEvent(new CustomEvent('nosr:toast-show', { detail: { element: toast } }));
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('nosr:toast-hide', { detail: { element: toast } }));
+        // CSS fallback 退场（GSAP 不存在时）
+        if (!window.gsap) {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+        }
+    }, duration - 300);
     setTimeout(() => toast.remove(), duration);
 }
 

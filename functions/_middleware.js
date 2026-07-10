@@ -6,8 +6,8 @@
  * - 首页检查 cookie，无认证则注入登录页
  */
 
-const PUBLIC_PATHS = ['/api/auth'];
-const ADMIN_ONLY_PATHS = ['/api/bookmarks', '/api/rss/feeds', '/api/monitor/targets'];
+const PUBLIC_PREFIXES = ['/api/auth'];
+const ADMIN_ONLY_PATHS = [];
 
 function base64UrlDecode(str) {
     str = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -92,7 +92,7 @@ export async function onRequest(context) {
     }
 
     // 公开接口直接放行
-    if (PUBLIC_PATHS.includes(path)) {
+    if (PUBLIC_PREFIXES.some(p => path.startsWith(p))) {
         return context.next();
     }
 

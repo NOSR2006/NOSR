@@ -1,17 +1,19 @@
 /**
  * auth.js — 认证模块
- * 管理登录/登出 UI 和状态
+ * 管理登录/注册/登出 UI 和状态
+ * v260711b — Phase 2: 用户名+密码注册/登录 + D1
  */
 
-import { API, $ } from './utils.js?v=260709v';
+import { API, $ } from './utils.js?v=260711b';
 
 let currentRole = null;
+let currentUsername = null;
 
 export function getRole() { return currentRole; }
+export function getUsername() { return currentUsername; }
 export function isAdmin() { return currentRole === 'admin'; }
 
 export function initAuth() {
-    // 先挂事件监听器，再异步检查认证状态
     showLogin();
 
     // 后台检查是否已有有效会话
@@ -19,6 +21,7 @@ export function initAuth() {
         .then(data => {
             if (data.authenticated) {
                 currentRole = data.role;
+                currentUsername = data.username || data.role;
                 showDashboard();
             }
         })
@@ -27,52 +30,111 @@ export function initAuth() {
 
 function showLogin() {
     const overlay = $('#loginOverlay');
-    const form = $('#loginForm');
-    const errorEl = $('#loginError');
-    const input = $('#passwordInput');
+    const loginForm = $('#loginForm');
+    const registerForm = $('#registerForm');
+    const loginError = $('#loginError');
+    const registerError = $('#registerError');
     const guestBtn = $('#guestBtn');
+    const tabLogin = $('#tabLogin');
+    const tabRegister = $('#tabRegister');
+    const loginUsername = $('#loginUsername');
+    const loginPassword = $('#loginPassword');
+    const regUsername = $('#regUsername');
+    const regPassword = $('#regPassword');
 
-    // 确保登录页可见
     overlay.classList.remove('hidden');
 
-    // 管理员登录
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const password = input.value.trim();
-        if (!password) return;
+    // ===== Tab 切换 =====
+    tabLogin.addEventListener('click', () => {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginError.textContent = '';
+        registerError.textContent = '';
+    });
 
-        errorEl.textContent = '';
-        const btn = form.querySelector('button[type="submit"]');
+    tabRegister.addEventListener('click', () => {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        loginError.textContent = '';
+        registerError.textContent = '';
+    });
+
+    // ===== 登录 =====
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = loginUsername.value.trim();
+        const password = loginPassword.value.trim();
+        if (!username || !password) return;
+
+        loginError.textContent = '';
+        const btn = loginForm.querySelector('button[type="submit"]');
         btn.disabled = true;
-        btn.textContent = '...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
         try {
-            const data = await API.auth.login(password);
+            const data = await API.auth.login(username, password);
             currentRole = data.role;
+            currentUsername = data.username || username;
             showDashboard();
         } catch (err) {
-            errorEl.textContent = err.message || '密码错误，请重试';
-            input.value = '';
-            input.focus();
+            loginError.textContent = err.message || '登录失败';
+            loginPassword.value = '';
+            loginPassword.focus();
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i>';
         }
     });
 
-    // 访客登录
-    guestBtn.addEventListener('click', async () => {
-        guestBtn.disabled = true;
-        guestBtn.textContent = '登录中...';
+    // ===== 注册 =====
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = regUsername.value.trim();
+        const password = regPassword.value.trim();
+        if (!username || !password) return;
+
+        registerError.textContent = '';
+        const btn = registerForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
         try {
-            const data = await API.auth.login('guest');
+            const data = await API.auth.register(username, password);
             currentRole = data.role;
+            currentUsername = data.username || username;
+            showDashboard();
+        } catch (err) {
+            registerError.textContent = err.message || '注册失败';
+            if (err.message?.includes('taken') || err.message?.includes('already')) {
+                regUsername.focus();
+            } else {
+                regPassword.focus();
+            }
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-user-plus"></i>';
+        }
+    });
+
+    // ===== 访客 =====
+    guestBtn.addEventListener('click', async () => {
+        guestBtn.disabled = true;
+        guestBtn.textContent = '进入中...';
+
+        try {
+            // 发送无凭证登录请求
+            const data = await API.auth.login('', 'guest');
+            currentRole = data.role;
+            currentUsername = 'guest';
             showDashboard();
         } catch {
-            // API 失败时用仅前端标记的访客模式
-            // 此时 API 调用会因为缺 token 被拒，但至少能看到界面框架
+            // API 失败时用纯前端访客模式
             currentRole = 'visitor';
+            currentUsername = 'guest';
             showDashboard();
         } finally {
             guestBtn.disabled = false;
@@ -80,12 +142,22 @@ function showLogin() {
         }
     });
 
-    // 回车提交
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+    // 回车支持
+    loginUsername.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            loginPassword.focus();
+        }
     });
 
-    input.focus();
+    regUsername.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            regPassword.focus();
+        }
+    });
+
+    loginUsername.focus();
 }
 
 function showDashboard() {
@@ -101,17 +173,23 @@ function showDashboard() {
     if (currentRole === 'admin') {
         roleBadge.textContent = '管理员';
         roleBadge.className = 'role-badge admin';
+    } else if (currentRole === 'user') {
+        roleBadge.textContent = currentUsername || '用户';
+        roleBadge.className = 'role-badge user';
     } else {
         roleBadge.textContent = '访客';
         roleBadge.className = 'role-badge visitor';
         document.body.classList.add('visitor');
     }
 
-    window.dispatchEvent(new CustomEvent('nosr:dashboard-ready', { detail: { role: currentRole } }));
+    window.dispatchEvent(new CustomEvent('nosr:dashboard-ready', {
+        detail: { role: currentRole, username: currentUsername }
+    }));
 }
 
 export async function logout() {
     try { await API.auth.logout(); } catch { /* ignore */ }
     currentRole = null;
+    currentUsername = null;
     location.reload();
 }

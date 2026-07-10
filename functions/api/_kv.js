@@ -30,53 +30,6 @@ async function listKeys(env, namespace, prefix = '') {
     return result.keys.map(k => k.name.replace(`${KV_PREFIX}${namespace}:`, ''));
 }
 
-// ===== Bookmarks =====
-
-async function getBookmarks(env, userId = 'admin') {
-    const data = await getJSON(env, 'bookmarks', userId);
-    return data || { categories: [], items: [] };
-}
-
-async function saveBookmarks(env, bookmarks, userId = 'admin') {
-    await putJSON(env, 'bookmarks', userId, bookmarks);
-}
-
-// ===== RSS Feeds =====
-
-async function getRssFeeds(env, userId = 'admin') {
-    const data = await getJSON(env, 'rss_feeds', userId);
-    return data || { feeds: [] };
-}
-
-async function saveRssFeeds(env, feeds, userId = 'admin') {
-    await putJSON(env, 'rss_feeds', userId, feeds);
-}
-
-// ===== Monitor Targets =====
-
-async function getMonitorTargets(env, userId = 'admin') {
-    const data = await getJSON(env, 'monitor', userId);
-    return data || { targets: [] };
-}
-
-async function saveMonitorTargets(env, targets, userId = 'admin') {
-    await putJSON(env, 'monitor', userId, targets);
-}
-
-// ===== 站点配置 =====
-
-async function getSiteConfig(env) {
-    return await getJSON(env, 'config', 'site') || {};
-}
-
-async function saveSiteConfig(env, config) {
-    await putJSON(env, 'config', 'site', config);
-}
-
 export {
     getJSON, putJSON, deleteKey, listKeys,
-    getBookmarks, saveBookmarks,
-    getRssFeeds, saveRssFeeds,
-    getMonitorTargets, saveMonitorTargets,
-    getSiteConfig, saveSiteConfig
 };

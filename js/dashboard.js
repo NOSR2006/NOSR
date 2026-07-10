@@ -1,42 +1,33 @@
 /**
- * dashboard.js — 仪表盘主入口
+ * dashboard.js — NOSR's RNG 主入口
  * 面板模块采用动态 import，仅在登录后按需加载
  */
 
-console.log('NOSR Dashboard v260705a');
+console.log("NOSR's RNG v260711b");
 
-import { initAuth, logout } from './auth.js?v=260705a';
-import { $, showToast } from './utils.js?v=260705a';
+import { initAuth, logout } from './auth.js?v=260711b';
+import { $, showToast } from './utils.js?v=260711b';
 
 // ===== 主初始化 =====
 async function init() {
-    // 1. 认证 (auth.js 立即加载，它很小)
+    // 1. 认证
     await initAuth();
 
-    // 2. 仪表盘就绪 → 按需加载面板
+    // 2. 仪表盘就绪 → 按需加载 RNG
     window.addEventListener('nosr:dashboard-ready', async (e) => {
         const role = e.detail.role;
-        console.log(`NOSR Dashboard 已就绪 — 角色: ${role}`);
+        console.log(`NOSR's RNG 已就绪 — 角色: ${role}`);
 
-        // 动态加载各模块，并行不阻塞
-        const load = (path) => import(`./modules/${path}`).catch(() => null);
+        // 动态加载 RNG 模块
+        const load = (path) => import(`./modules/${path}?v=260711b`).catch(() => null);
 
-        const [clock, rng, bookmarks, rss, monitor] =
-            await Promise.allSettled([
-                load('clock.js'),   load('rng.js'),
-                load('bookmarks.js'), load('rss.js'),
-                load('monitor.js'),
-            ]);
+        const [rng] = await Promise.allSettled([
+            load('rng.js'),
+        ]);
 
-        // 逐个初始化
-        const inits = [
-            clock.value      ?.initClock(),
-            rng.value        ?.initRNG(),
-            bookmarks.value  ?.initBookmarks(),
-            rss.value        ?.initRSS(),
-            monitor.value    ?.initMonitor(),
-        ].filter(Boolean);
-        await Promise.allSettled(inits);
+        // 初始化 RNG
+        const rngInit = rng.value?.initRNG();
+        if (rngInit) await rngInit;
 
         if (role === 'admin') {
             showToast('欢迎回来', 'info', 2000);

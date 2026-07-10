@@ -4,50 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="NOSR Dashboard — 个人控制面板">
+    <meta name="description" content="NOSR's RNG — 频谱扫描与稀有收集">
     <meta name="theme-color" content="#0d1117">
     <meta name="robots" content="noindex, nofollow">
-    <title>NOSR Dashboard</title>
-    <link rel="icon" href="./img/logo.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./img/logo.png">
+    <title>NOSR's RNG</title>
+    <link rel="icon" href="./img/logo.svg?v=260706b" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./img/logo.png?v=260706b">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="./css/index.css?v=260705a">
-    <link rel="stylesheet" href="./css/dashboard.css?v=260705a">
+    <link rel="stylesheet" href="./css/dashboard.css?v=260711b">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script type="module" src="./js/dashboard.js?v=260705a"></script>
+    <script type="module" src="./js/dashboard.js?v=260711b"></script>
 </head>
 <body>
 
-    <!-- ====== 登录遮罩 ====== -->
+    <!-- ====== 登录/注册遮罩 ====== -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
             <div class="login-logo">
-                <img src="./img/logo.svg" alt="NOSR" class="logo-icon">
+                <img src="./img/logo.svg?v=260706b" alt="NOSR" class="logo-icon">
             </div>
-            <h2>NOSR Dashboard</h2>
-            <p class="login-desc">私密空间，请输入访问密码</p>
-            <form id="loginForm" class="login-form" method="post" action="#" onsubmit="
-                var p=document.getElementById('passwordInput').value.trim();
-                if(!p)return false;
-                var e=document.getElementById('loginError');
-                e.textContent='';
-                fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})})
-                .then(r=>r.json()).then(d=>{
-                    if(d.success){
-                        document.getElementById('loginOverlay').classList.add('hidden');
-                        document.getElementById('dashboard').style.display='';
-                        document.getElementById('topBar').style.display='';
-                        var rb=document.getElementById('roleBadge');
-                        rb.textContent=d.role==='admin'?'管理员':'用户';
-                        rb.className='role-badge '+(d.role==='admin'?'admin':'visitor');
-                        if(d.role!=='admin')document.body.classList.add('visitor');
-                        window.dispatchEvent(new CustomEvent('nosr:dashboard-ready',{detail:{role:d.role}}));
-                    }else{e.textContent=d.error||'密码错误'}
-                }).catch(function(){e.textContent='连接失败，请检查网络'});
-                return false">
+            <h2>NOSR's RNG</h2>
+
+            <!-- Tab 切换 -->
+            <div class="login-tabs">
+                <button id="tabLogin" class="login-tab active" data-tab="login">登录</button>
+                <button id="tabRegister" class="login-tab" data-tab="register">注册</button>
+            </div>
+
+            <!-- 登录表单 -->
+            <form id="loginForm" class="login-form" method="post" action="#">
                 <div class="input-group">
-                    <input type="password" id="passwordInput" name="password" placeholder="输入密码..."
+                    <input type="text" id="loginUsername" name="username" placeholder="用户名"
+                        autocomplete="username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" name="password" placeholder="密码"
                         autocomplete="current-password" required>
                     <button type="submit" class="btn-login">
                         <i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -55,30 +48,34 @@
                 </div>
                 <p id="loginError" class="login-error"></p>
             </form>
-            <button id="guestBtn" class="btn-guest" onclick="
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('dashboard').style.display='';
-                document.getElementById('topBar').style.display='';
-                document.body.classList.add('visitor');
-                document.getElementById('roleBadge').textContent='访客';
-                document.getElementById('roleBadge').className='role-badge visitor';
-            ">以访客身份浏览</button>
-            <div class="login-version">v260709v</div>
+
+            <!-- 注册表单 -->
+            <form id="registerForm" class="login-form hidden" method="post" action="#">
+                <div class="input-group">
+                    <input type="text" id="regUsername" name="username" placeholder="用户名 (2-20字符)"
+                        autocomplete="username" required minlength="2" maxlength="20">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="regPassword" name="password" placeholder="密码 (至少4位)"
+                        autocomplete="new-password" required minlength="4">
+                    <button type="submit" class="btn-login">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </button>
+                </div>
+                <p id="registerError" class="login-error"></p>
+            </form>
+
+            <button id="guestBtn" class="btn-guest">以访客身份浏览</button>
+            <div class="login-version">v260711b</div>
         </div>
     </div>
 
     <!-- ====== 顶部栏 ====== -->
     <header id="topBar" class="topbar" style="display:none">
         <div class="topbar-left">
-            <img src="./img/logo.svg" alt="NOSR" class="topbar-logo">
-            <span class="topbar-title">NOSR Dashboard</span>
+            <img src="./img/logo.svg?v=260706b" alt="NOSR" class="topbar-logo">
+            <span class="topbar-title">NOSR's RNG</span>
             <span id="roleBadge" class="role-badge"></span>
-        </div>
-        <div class="topbar-center">
-            <div id="clock" class="clock">
-                <span id="clockTime"></span>
-                <span id="clockDate"></span>
-            </div>
         </div>
         <div class="topbar-right">
             <button id="refreshBtn" class="topbar-btn" title="刷新页面" onclick="location.reload()">
@@ -95,11 +92,11 @@
         </div>
     </header>
 
-    <!-- ====== 仪表盘主体 ====== -->
+    <!-- ====== RNG 主体 ====== -->
     <main id="dashboard" class="dashboard" style="display:none">
 
-        <!-- RNG Hero — 三栏 -->
-        <section class="panel rng-panel rng-hero">
+        <!-- RNG — 三栏 -->
+        <section class="panel rng-panel">
             <div class="rng-content">
                 <!-- 左栏：操作 + 统计 -->
                 <div class="rng-col rng-col-left">
@@ -125,85 +122,6 @@
                 <div class="rng-col rng-col-right">
                     <div class="rng-gallery-header">Prize Gallery</div>
                     <div id="rngGallery" class="rng-gallery"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 快捷入口 -->
-        <section class="panel bookmarks-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-bookmark"></i> 快捷入口</h3>
-                <button id="addBookmarkBtn" class="panel-btn admin-only" title="添加书签">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <div id="bookmarksGrid" class="bookmarks-grid">
-                <!-- 默认内置快捷入口 -->
-                <a href="https://github.com" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-brands fa-github"></i>
-                    <span>GitHub</span>
-                </a>
-                <a href="https://mail.google.com" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>Gmail</span>
-                </a>
-                <a href="https://chatgpt.com" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-solid fa-robot"></i>
-                    <span>ChatGPT</span>
-                </a>
-                <a href="https://alist.nosr.top" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-solid fa-cloud"></i>
-                    <span>网盘</span>
-                </a>
-                <a href="https://dash.nosr.top" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-solid fa-folder-closed"></i>
-                    <span>面板</span>
-                </a>
-                <a href="https://bitwarden.nosr.top" target="_blank" rel="noopener" class="bookmark-item">
-                    <i class="fa-solid fa-key"></i>
-                    <span>密码</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- RSS 订阅 -->
-        <section class="panel rss-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-rss"></i> 信息流</h3>
-                <button id="addRssBtn" class="panel-btn admin-only" title="添加订阅源">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <div id="rssList" class="rss-list">
-                <p class="empty-hint">暂无订阅源，点击 + 添加</p>
-            </div>
-            <div id="rssInput" class="rss-input hidden">
-                <input type="url" id="rssUrlInput" placeholder="RSS 订阅地址...">
-                <input type="text" id="rssTitleInput" placeholder="订阅源名称（可选）...">
-                <div class="rss-input-actions">
-                    <button id="rssSaveBtn" class="btn-sm btn-primary">添加</button>
-                    <button id="rssCancelBtn" class="btn-sm">取消</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 第三行右：服务监控 -->
-        <section class="panel monitor-panel">
-            <div class="panel-header">
-                <h3><i class="fa-solid fa-server"></i> 服务状态</h3>
-                <button id="addMonitorBtn" class="panel-btn admin-only" title="添加监控">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <div id="monitorList" class="monitor-list">
-                <p class="empty-hint">暂无监控目标</p>
-            </div>
-            <div id="monitorInput" class="monitor-input hidden">
-                <input type="text" id="monitorNameInput" placeholder="服务名称...">
-                <input type="url" id="monitorUrlInput" placeholder="服务 URL...">
-                <div class="monitor-input-actions">
-                    <button id="monitorSaveBtn" class="btn-sm btn-primary">添加</button>
-                    <button id="monitorCancelBtn" class="btn-sm">取消</button>
                 </div>
             </div>
         </section>
