@@ -296,6 +296,31 @@ export async function initRNG() {
     const showPool = _all.filter((_, i) => i % _step === 0);
     const pity = pityBrackets.map(() => 0);
 
+    // ── 持久化钩子：外部模块可通过 window.__rngHooks 注入 ──
+    // onLoad(savedState) → 恢复 total/hits/pity
+    // onRoll(rollData) → 记录一次 Roll 用于同步
+    window.__rngState = { total, hits, pity };
+    if (window.__rngHooks?.onLoad) {
+        try {
+            const saved = await window.__rngHooks.onLoad();
+            if (saved) {
+                if (typeof saved.total === 'number') total = saved.total;
+                if (saved.pity && Array.isArray(saved.pity)) {
+                    saved.pity.forEach((v, i) => { if (i < pity.length) pity[i] = v; });
+                }
+                if (saved.hits && typeof saved.hits === 'object') {
+                    for (const [tier, count] of Object.entries(saved.hits)) {
+                        if (tier in hits) hits[tier] = count;
+                    }
+                }
+                window.__rngState = { total, hits, pity };
+                console.log(`[NOSR RNG] Restored state: ${total} rolls, ${Object.values(hits).filter(v => v > 0).length} tiers discovered`);
+            }
+        } catch (e) {
+            console.warn('[NOSR RNG] State load failed:', e);
+        }
+    }
+
     const drawGallery = () => {
         gallery.innerHTML = POOL.filter(p => !p.hidden || hits[p.tier] > 0).map(p => {
             const unlocked = hits[p.tier] > 0;
@@ -605,6 +630,19 @@ export async function initRNG() {
         }
 
         hits[prize.tier]++;
+
+        // ── 持久化: 记录 Roll + 保存状态 ──
+        const isNew = hits[prize.tier] === 1;
+        window.__rngState = { total, hits, pity };
+        if (window.__rngHooks?.onRoll) {
+            window.__rngHooks.onRoll({
+                rollNumber: total,
+                tier: prize.tier,
+                level: prize.level,
+                denom: prize.denom,
+                isNew,
+            }).catch(e => console.warn('[NOSR RNG] Roll persist failed:', e));
+        }
 
         // NOSR 彩蛋永久效果
         if (prize.tier === 'nosr') {

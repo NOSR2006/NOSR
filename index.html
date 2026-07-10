@@ -12,10 +12,10 @@
     <link rel="apple-touch-icon" href="./img/logo.png?v=260706b">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="./css/index.css?v=260705a">
-    <link rel="stylesheet" href="./css/dashboard.css?v=260711b">
+    <link rel="stylesheet" href="./css/dashboard.css?v=260711d">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script type="module" src="./js/dashboard.js?v=260711b"></script>
+    <script type="module" src="./js/dashboard.js?v=260711d"></script>
 </head>
 <body>
 
@@ -31,42 +31,53 @@
             <div class="login-tabs">
                 <button id="tabLogin" class="login-tab active" data-tab="login">登录</button>
                 <button id="tabRegister" class="login-tab" data-tab="register">注册</button>
+                <div class="login-tab-indicator"></div>
             </div>
 
             <!-- 登录表单 -->
             <form id="loginForm" class="login-form" method="post" action="#">
-                <div class="input-group">
+                <div class="input-wrap">
+                    <i class="fa-solid fa-user"></i>
                     <input type="text" id="loginUsername" name="username" placeholder="用户名"
                         autocomplete="username" required>
                 </div>
-                <div class="input-group">
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock"></i>
                     <input type="password" id="loginPassword" name="password" placeholder="密码"
                         autocomplete="current-password" required>
-                    <button type="submit" class="btn-login">
-                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    </button>
                 </div>
                 <p id="loginError" class="login-error"></p>
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>登录</span>
+                </button>
             </form>
 
             <!-- 注册表单 -->
             <form id="registerForm" class="login-form hidden" method="post" action="#">
-                <div class="input-group">
+                <div class="input-wrap">
+                    <i class="fa-solid fa-user"></i>
                     <input type="text" id="regUsername" name="username" placeholder="用户名 (2-20字符)"
                         autocomplete="username" required minlength="2" maxlength="20">
                 </div>
-                <div class="input-group">
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock"></i>
                     <input type="password" id="regPassword" name="password" placeholder="密码 (至少4位)"
                         autocomplete="new-password" required minlength="4">
-                    <button type="submit" class="btn-login">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </button>
                 </div>
                 <p id="registerError" class="login-error"></p>
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>注册</span>
+                </button>
             </form>
 
-            <button id="guestBtn" class="btn-guest">以访客身份浏览</button>
-            <div class="login-version">v260711b</div>
+            <div class="login-divider"><span>or</span></div>
+            <button id="guestBtn" class="btn-guest">
+                <i class="fa-solid fa-eye"></i>
+                <span>以访客身份浏览</span>
+            </button>
+            <div class="login-version">v260711d</div>
         </div>
     </div>
 

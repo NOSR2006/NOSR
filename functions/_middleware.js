@@ -27,7 +27,10 @@ function parseJwt(token) {
 async function verifyToken(token, secret) {
     // 简化版 JWT 验证：HMAC-SHA256
     const encoder = new TextEncoder();
-    const [headerB64, payloadB64, signatureB64] = token.split('.');
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+
+    const [headerB64, payloadB64, signatureB64] = parts;
     const data = `${headerB64}.${payloadB64}`;
 
     const key = await crypto.subtle.importKey(

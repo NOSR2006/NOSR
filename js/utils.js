@@ -41,6 +41,13 @@ export async function api(url, options = {}) {
 }
 
 export const API = {
+    // 通用快捷
+    get: (url) => api(url),
+    post: (url, data) => api(url, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    }),
+
     auth: {
         login: (username, password) => api('/api/auth', {
             method: 'POST',
@@ -52,6 +59,14 @@ export const API = {
         }),
         logout: () => api('/api/auth', { method: 'DELETE' }),
         check: () => api('/api/auth'),
+    },
+
+    rng: {
+        loadState: () => api('/api/rng'),
+        sync: (data) => api('/api/rng', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        }),
     },
 };
 

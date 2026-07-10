@@ -1,14 +1,15 @@
 /**
  * 认证接口 — /api/auth
- * POST   /api/auth          → 登录（用户名密码 / 管理员密码 / 访客）
- * POST   /api/auth/register → 注册
- * GET    /api/auth          → 检查登录状态
- * DELETE /api/auth          → 登出
+ * POST   → 登录（用户名密码 / 管理员密码 / 访客）
+ * GET    → 检查登录状态
+ * DELETE → 登出
+ *
+ * 注册接口在 /api/auth/register.js
  */
 
-import { createToken, verifyToken } from '../_middleware.js';
-import { generateSalt, hashPassword, verifyPassword } from './_crypto.js';
-import { findUserByUsername, createUser, updateLastLogin, getUserProfile } from './_db.js';
+import { createToken, verifyToken } from '../../_middleware.js';
+import { verifyPassword } from '../_crypto.js';
+import { findUserByUsername, updateLastLogin, getUserProfile } from '../_db.js';
 
 function json(data, status = 200) {
     return new Response(JSON.stringify(data), {
@@ -40,83 +41,8 @@ function clearCookie(response, name) {
     response.headers.set('Set-Cookie', `${name}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`);
 }
 
-// ===== 注册 =====
+// ===== 登录 =====
 export async function onRequestPost(context) {
-    const { request, env } = context;
-    const url = new URL(request.url);
-
-    // 路由：/api/auth/register
-    if (url.pathname === '/api/auth/register') {
-        return handleRegister(context);
-    }
-
-    // 路由：/api/auth（登录）
-    return handleLogin(context);
-}
-
-async function handleRegister(context) {
-    const { request, env } = context;
-
-    let body;
-    try { body = await request.json(); }
-    catch { return json({ error: 'Invalid JSON' }, 400); }
-
-    const { username, password } = body;
-
-    // 校验
-    if (!username || typeof username !== 'string') {
-        return json({ error: 'Username required' }, 400);
-    }
-    if (username.length < 2 || username.length > 20) {
-        return json({ error: 'Username must be 2-20 characters' }, 400);
-    }
-    if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(username)) {
-        return json({ error: 'Username: letters, digits, underscore, Chinese only' }, 400);
-    }
-    if (!password || typeof password !== 'string' || password.length < 4) {
-        return json({ error: 'Password must be at least 4 characters' }, 400);
-    }
-
-    const db = env.NOSR_DB;
-    if (!db) {
-        return json({ error: 'Database not configured' }, 500);
-    }
-
-    // 检查用户名是否已存在
-    const existing = await findUserByUsername(db, username);
-    if (existing) {
-        return json({ error: 'Username already taken' }, 409);
-    }
-
-    // 检查是否是第一个用户（第一个用户自动成为管理员）
-    const countResult = await db.prepare('SELECT COUNT(*) as cnt FROM users').first();
-    const isFirstUser = countResult.cnt === 0;
-    const role = isFirstUser ? 'admin' : 'user';
-
-    // 哈希密码
-    const salt = generateSalt();
-    const passwordHash = await hashPassword(password, salt);
-
-    // 创建用户
-    const user = await createUser(db, username, passwordHash, salt, role);
-
-    // 更新最后登录
-    await updateLastLogin(db, user.id);
-
-    // 签发 JWT
-    const secret = env.JWT_SECRET || 'nosr-default-secret-change-me';
-    const token = await createToken(
-        { role: user.role, sub: user.username, uid: user.id },
-        secret,
-        '168h'  // 7 天
-    );
-
-    const response = json({ success: true, role: user.role, username: user.username });
-    setCookie(response, 'nosr_token', token, 604800);
-    return response;
-}
-
-async function handleLogin(context) {
     const { request, env } = context;
 
     let body;
@@ -138,7 +64,7 @@ async function handleLogin(context) {
             return response;
         }
 
-        // 访客（无密码或 "guest"）
+        // 访客
         if (!password || password === 'guest') {
             const secret = env.JWT_SECRET || 'nosr-default-secret-change-me';
             const token = await createToken({ role: 'visitor', sub: 'guest' }, secret, '24h');
@@ -207,7 +133,6 @@ export async function onRequestGet(context) {
         return json({ authenticated: false });
     }
 
-    // 如果有 uid，尝试从 D1 获取最新资料
     let profile = null;
     if (payload.uid && env.NOSR_DB) {
         try {

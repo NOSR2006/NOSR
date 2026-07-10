@@ -1,10 +1,10 @@
 /**
  * auth.js — 认证模块
  * 管理登录/注册/登出 UI 和状态
- * v260711b — Phase 2: 用户名+密码注册/登录 + D1
+ * v260711d — Phase 2: 用户名+密码注册/登录 + D1
  */
 
-import { API, $ } from './utils.js?v=260711b';
+import { API, $ } from './utils.js?v=260711d';
 
 let currentRole = null;
 let currentUsername = null;
@@ -44,10 +44,13 @@ function showLogin() {
 
     overlay.classList.remove('hidden');
 
+    const tabsContainer = $('.login-tabs');
+
     // ===== Tab 切换 =====
     tabLogin.addEventListener('click', () => {
         tabLogin.classList.add('active');
         tabRegister.classList.remove('active');
+        tabsContainer.removeAttribute('data-active');
         loginForm.classList.remove('hidden');
         registerForm.classList.add('hidden');
         loginError.textContent = '';
@@ -57,6 +60,7 @@ function showLogin() {
     tabRegister.addEventListener('click', () => {
         tabRegister.classList.add('active');
         tabLogin.classList.remove('active');
+        tabsContainer.setAttribute('data-active', 'register');
         registerForm.classList.remove('hidden');
         loginForm.classList.add('hidden');
         loginError.textContent = '';
