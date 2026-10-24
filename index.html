@@ -1,149 +1,56 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="NOSR's RNG — 频谱扫描与稀有收集">
-    <meta name="theme-color" content="#0d1117">
-    <meta name="robots" content="noindex, nofollow">
-    <title>NOSR's RNG</title>
-    <link rel="icon" href="./img/logo.svg?v=260706b" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./img/logo.png?v=260706b">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="./css/index.css?v=260705a">
-    <link rel="stylesheet" href="./css/dashboard.css?v=260711d">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script type="module" src="./js/dashboard.js?v=260711d"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>NOSR</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: radial-gradient(120% 120% at 50% 0%, #131a24 0%, #0a0d12 55%, #06080b 100%);
+      color: #e6edf3;
+      font-family: ui-sans-serif, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .wrap { text-align: center; padding: 2rem; }
+    .mark {
+      font-size: clamp(3rem, 14vw, 7rem);
+      font-weight: 800;
+      letter-spacing: .18em;
+      line-height: 1;
+      background: linear-gradient(180deg, #f2f7ff 0%, #7d8fa6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      user-select: none;
+    }
+    .rule {
+      width: 64px; height: 2px; margin: 1.6rem auto;
+      background: linear-gradient(90deg, transparent, #3a4a5f, transparent);
+    }
+    .msg { font-size: 1rem; letter-spacing: .08em; color: #8b9bb0; }
+    .dim { margin-top: 2.4rem; font-size: .75rem; letter-spacing: .1em; color: #46566b; }
+    .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: #3f7ad6; margin-right: .5rem; vertical-align: middle;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:.35 } 50% { opacity:1 } }
+    @media (prefers-reduced-motion: reduce) { .dot { animation: none; opacity: .7 } }
+  </style>
 </head>
 <body>
-
-    <!-- ====== 登录/注册遮罩 ====== -->
-    <div id="loginOverlay" class="login-overlay">
-        <div class="login-card">
-            <div class="login-logo">
-                <img src="./img/logo.svg?v=260706b" alt="NOSR" class="logo-icon">
-            </div>
-            <h2>NOSR's RNG</h2>
-
-            <!-- Tab 切换 -->
-            <div class="login-tabs">
-                <button id="tabLogin" class="login-tab active" data-tab="login">登录</button>
-                <button id="tabRegister" class="login-tab" data-tab="register">注册</button>
-                <div class="login-tab-indicator"></div>
-            </div>
-
-            <!-- 登录表单 -->
-            <form id="loginForm" class="login-form" method="post" action="#">
-                <div class="input-wrap">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="loginUsername" name="username" placeholder="用户名"
-                        autocomplete="username" required>
-                </div>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="loginPassword" name="password" placeholder="密码"
-                        autocomplete="current-password" required>
-                </div>
-                <p id="loginError" class="login-error"></p>
-                <button type="submit" class="btn-submit">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    <span>登录</span>
-                </button>
-            </form>
-
-            <!-- 注册表单 -->
-            <form id="registerForm" class="login-form hidden" method="post" action="#">
-                <div class="input-wrap">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="regUsername" name="username" placeholder="用户名 (2-20字符)"
-                        autocomplete="username" required minlength="2" maxlength="20">
-                </div>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="regPassword" name="password" placeholder="密码 (至少4位)"
-                        autocomplete="new-password" required minlength="4">
-                </div>
-                <p id="registerError" class="login-error"></p>
-                <button type="submit" class="btn-submit">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span>注册</span>
-                </button>
-            </form>
-
-            <div class="login-divider"><span>or</span></div>
-            <button id="guestBtn" class="btn-guest">
-                <i class="fa-solid fa-eye"></i>
-                <span>以访客身份浏览</span>
-            </button>
-            <div class="login-version">v260711d</div>
-        </div>
-    </div>
-
-    <!-- ====== 顶部栏 ====== -->
-    <header id="topBar" class="topbar" style="display:none">
-        <div class="topbar-left">
-            <img src="./img/logo.svg?v=260706b" alt="NOSR" class="topbar-logo">
-            <span class="topbar-title">NOSR's RNG</span>
-            <span id="roleBadge" class="role-badge"></span>
-        </div>
-        <div class="topbar-right">
-            <button id="refreshBtn" class="topbar-btn" title="刷新页面" onclick="location.reload()">
-                <i class="fa-solid fa-arrows-rotate"></i>
-            </button>
-            <button id="themeToggle" class="topbar-btn" title="切换主题" onclick="
-                var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
-                document.documentElement.setAttribute('data-theme',t);
-                localStorage.setItem('nosr-theme',t);
-            "><i class="fa-solid fa-sun"></i><i class="fa-solid fa-moon"></i></button>
-            <button id="logoutBtn" class="topbar-btn" title="退出">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- ====== RNG 主体 ====== -->
-    <main id="dashboard" class="dashboard" style="display:none">
-
-        <!-- RNG — 三栏 -->
-        <section class="panel rng-panel">
-            <div class="rng-content">
-                <!-- 左栏：操作 + 统计 -->
-                <div class="rng-col rng-col-left">
-                    <button id="rngRollBtn" class="rng-roll-btn">
-                        <i class="fa-solid fa-shuffle"></i> Roll
-                    </button>
-                    <label class="rng-auto-toggle" id="rngAutoLabel">
-                        <input type="checkbox" id="rngAutoCb">
-                        <span class="rng-auto-slider"></span>
-                        <span class="rng-auto-text">Auto</span>
-                    </label>
-                    <div class="rng-stats" id="rngStats"></div>
-                </div>
-                <!-- 中栏：显示区 -->
-                <div class="rng-col rng-col-center">
-                    <div class="rng-display" id="rngDisplay">
-                        <span id="rngSymbol" class="rng-symbol">?</span>
-                        <span id="rngLabel" class="rng-label-text"></span>
-                        <span id="rngRarity" class="rng-rarity"></span>
-                    </div>
-                </div>
-                <!-- 右栏：可滚动图鉴 -->
-                <div class="rng-col rng-col-right">
-                    <div class="rng-gallery-header">Prize Gallery</div>
-                    <div id="rngGallery" class="rng-gallery"></div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-    (function(){
-        var t=localStorage.getItem('nosr-theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
-        document.documentElement.setAttribute('data-theme',t);
-    })();
-    </script>
+  <main class="wrap">
+    <div class="mark">NOSR</div>
+    <div class="rule"></div>
+    <p class="msg"><span class="dot"></span>站点重建中</p>
+    <p class="dim">UNDER CONSTRUCTION</p>
+  </main>
 </body>
 </html>

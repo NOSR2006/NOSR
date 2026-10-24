@@ -1,17 +1,5 @@
 /*
-  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow, noarchive
   X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=self
-
-/font/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/img/*
-  Cache-Control: public, max-age=86400
-
-/js/*
-  Cache-Control: public, max-age=3600
-
-/css/*
-  Cache-Control: public, max-age=3600
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
